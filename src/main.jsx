@@ -15,7 +15,7 @@ const phases = [
 ];
 
 const mechanismSteps = [
-  ['01', 'Source Pack', 'Bound the legal corpus before miners touch the task. Real sources and synthetic traps enter together.'],
+  ['01', 'Source Pack', 'Bound the legal corpus before miners touch the task. Real sources and invalid-source checks enter together.'],
   ['02', 'Miner Maps', 'Miners produce jurisdiction-aware uncertainty maps instead of confident legal answers.'],
   ['03', 'Validator Score', 'Validators check citations first, then score divergence fidelity and reasoning quality.'],
   ['04', 'Accepted Packet', 'The highest-weight packet becomes a reusable map for downstream agents or products.']
@@ -25,13 +25,13 @@ const subnetEntrySteps = [
   ['01', 'Hotkey identity', 'Miner identity is the hotkey. The validator scores by UID, not by website account.'],
   ['02', 'Synapse challenge', 'Miner receives challenge_id, question, required jurisdictions, corpus manifest, and schema.'],
   ['03', 'Packet response', 'Miner returns structured map claims, divergence pairs, unresolved gaps, and citations.'],
-  ['04', 'Weight output', 'Validator converts accepted scores into UID weights; trap-gated miners receive zero.']
+  ['04', 'Weight output', 'Validator converts accepted scores into UID weights; source-gated miners receive zero.']
 ];
 
 const minerEntryArtifacts = [
   ['Synapse payload', '/miner_entry.json', 'challenge_id · question · jurisdictions · corpus_manifest'],
   ['Submission schema', '/map_packet.schema.json', 'map_claims · divergence_pairs · unresolved_gaps · citations'],
-  ['Sample packet', '/sample_map_packet.json', 'public-safe OUSG Map Packet submission'],
+  ['Sample packet', '/sample_map_packet.json', 'example OUSG Map Packet submission'],
   ['Subnet status', '/subnet_status.json', 'winner UID · gated policy · normalized weight output']
 ];
 
@@ -40,12 +40,12 @@ const subnetRuntimeStats = [
   ['Subnet', 'LUO Legal Uncertainty Oracle'],
   ['Round', 'LUO-OUSG-XJ-V1'],
   ['Winner UID', '3 · score 0.9625'],
-  ['Gate policy', 'trap hit → weight 0'],
+  ['Gate policy', 'invalid-source hit → weight 0'],
   ['Status file', 'subnet_status.json']
 ];
 
 const scoreWeights = [
-  ['Citation Validity', 0.5, 'Do cited source IDs exist in the real corpus, and do claimed holdings match the source text?'],
+  ['Citation Validity', 0.5, 'Do cited source IDs exist in the reviewed source set, and do claimed holdings match the source text?'],
   ['Divergence Fidelity', 0.3, 'Does the map preserve real jurisdictional disagreement instead of inventing certainty?'],
   ['Reasoning Coherence', 0.15, 'Do citations, facts, and conclusions close into a coherent reasoning chain?'],
   ['Coverage Breadth', 0.05, 'How much of the requested jurisdiction scope is covered without rewarding padding?']
@@ -100,7 +100,7 @@ function FormulaBlock({ active }) {
 
 // Code-native dotted world map. Continents are filled silhouettes (equirectangular,
 // viewBox 1000 x 520) used as a mask over a regular dot grid, so the atlas reads as a
-// real dot-matrix world map instead of a few hand-drawn strokes. No screenshot / image.
+// real dot-matrix world map instead of a few hand-drawn strokes.
 const ATLAS_LAND = [
   // North America
   'M33 72 L222 52 L305 49 L333 104 L353 121 L305 139 L278 185 L280 234 L208 202 L186 182 L161 153 L153 118 L83 87 Z',
@@ -191,22 +191,22 @@ function GridScanAtlas() {
       <div className="atlas-label atlas-us">
         <strong>US</strong>
         <span>split</span>
-        <small>sources: 12 | traps: 3</small>
+        <small>sources: 12 | checks: 3</small>
       </div>
       <div className="atlas-label atlas-eu">
         <strong>EU</strong>
         <span>gap</span>
-        <small>sources: 8 | traps: 4</small>
+        <small>sources: 8 | checks: 4</small>
       </div>
       <div className="atlas-label atlas-hk">
         <strong>HK</strong>
         <span>conditional</span>
-        <small>sources: 9 | traps: 2</small>
+        <small>sources: 9 | checks: 2</small>
       </div>
       <div className="atlas-label atlas-sg">
         <strong>SG</strong>
         <span>narrow</span>
-        <small>sources: 7 | traps: 1</small>
+        <small>sources: 7 | checks: 1</small>
       </div>
 
       <div className="atlas-legend">
@@ -468,7 +468,7 @@ function App() {
                   <>
                     <span>{source.id}</span>
                     <strong>{source.title}</strong>
-                    <small>{source.url ? `${source.jurisdiction} · open source ↗` : source.trap ? 'synthetic trap' : source.jurisdiction}</small>
+                    <small>{source.url ? `${source.jurisdiction} · open source ↗` : source.invalidSource ? 'invalid-source check' : source.jurisdiction}</small>
                   </>
                 );
 
@@ -477,7 +477,7 @@ function App() {
                     {content}
                   </a>
                 ) : (
-                  <article key={source.id} className={source.trap ? 'source trap' : 'source'}>
+                  <article key={source.id} className={source.invalidSource ? 'source invalidSource' : 'source'}>
                     {content}
                   </article>
                 );
@@ -693,7 +693,7 @@ function App() {
           <img src={wordmark} alt="" />
           <p>Legal Uncertainty Oracle turns reviewed sources into validator-scored legal map packets.</p>
           <div className="social-row" aria-label="Social links">
-            <a href="https://github.com/alexfanzong/LUO-subnet-demo" target="_blank" rel="noreferrer noopener">GH</a>
+            <a href="https://github.com/alexfanzong/LUO" target="_blank" rel="noreferrer noopener">GH</a>
             <a href="#top">X</a>
             <a href="#top">DC</a>
           </div>

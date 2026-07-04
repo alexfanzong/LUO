@@ -108,7 +108,7 @@ const CASE_META = {
   }
 };
 
-function trapIdSet(meta) {
+function invalidSourceIdSet(meta) {
   return new Set(Object.entries(meta.sourceAliases)
     .filter(([alias, id]) => alias.startsWith('SYN-') || id.includes('SYN-'))
     .map(([, id]) => id));
@@ -148,11 +148,11 @@ function riskState(state) {
 
 function sourceIdsFromText(text, meta, fallbackIds) {
   const ids = new Set();
-  const trapIds = trapIdSet(meta);
+  const invalidSourceIds = invalidSourceIdSet(meta);
   const tokens = String(text || '').match(/[A-Z]+-[A-Z0-9]+-\d+|[A-Z]+-\d+|US-CT|US-OFAC|SYN-\d+/g) || [];
   tokens.forEach((token) => {
     const id = normalizeSourceId(token, meta);
-    if (!trapIds.has(id)) ids.add(id);
+    if (!invalidSourceIds.has(id)) ids.add(id);
   });
   if (ids.size === 0) fallbackIds.forEach((id) => ids.add(id));
   return [...ids];
@@ -176,7 +176,7 @@ function isUnresolved(entry) {
 }
 
 function sourceTier(source) {
-  if (source.trap) return undefined;
+  if (source.invalidSource) return undefined;
   if (/docs\.ondo\.finance/.test(source.url || '')) return 'L2_secondary';
   return 'L1_primary';
 }
@@ -189,8 +189,8 @@ function acceptedMinerId(active) {
 export function createMapPacket(active, { caseId, mode }) {
   const meta = CASE_META[caseId];
   const dimensionScores = objectFromChecks(active.validator.checks);
-  const trapSources = active.sources.filter((source) => source.trap);
-  const realSources = active.sources.filter((source) => !source.trap);
+  const invalidSources = active.sources.filter((source) => source.invalidSource);
+  const realSources = active.sources.filter((source) => !source.invalidSource);
   const fallbackSourceIds = realSources.slice(0, 2).map((source) => normalizeSourceId(source.id, meta));
 
   return {
@@ -223,9 +223,9 @@ export function createMapPacket(active, { caseId, mode }) {
       citationStatus: source.citationStatus || 'text_verified',
       asOfDate: meta.productRef.asOfDate
     })),
-    validatorCanaries: {
-      trapIds: trapSources.map((source) => normalizeSourceId(source.id, meta)),
-      trapHits: [],
+    validatorChecks: {
+      invalidSourceIds: invalidSources.map((source) => normalizeSourceId(source.id, meta)),
+      invalidSourceHits: [],
       gateTriggered: false
     },
     map: {

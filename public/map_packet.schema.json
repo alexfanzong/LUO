@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://alexfanzong.github.io/LUO-subnet-demo/map_packet.schema.json",
+  "$id": "https://alexfanzong.github.io/LUO/map_packet.schema.json",
   "title": "LUO Map Packet Submission",
   "type": "object",
   "required": [
@@ -25,7 +25,7 @@
     },
     "minerHotkey": {
       "type": "string",
-      "description": "Public Bittensor miner hotkey identifier. Never include private keys, seed phrases, or wallet files."
+      "description": "Bittensor miner hotkey identifier."
     },
     "question": {
       "type": "string",

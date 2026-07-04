@@ -2,13 +2,13 @@
 
 <div align="center">
 
-<img src="public/luo-wordmark.png" alt="LUO logo" width="160">
+<img src="public/luo-wordmark.png" alt="Legal Uncertainty Oracle (LUO) logo" width="160">
 
-# LUO Subnet Demo
+# LUO
 
-**Bittensor testnet subnet runtime for validator-scored legal uncertainty maps.**
+**Legal Uncertainty Oracle. A Bittensor testnet subnet runtime for validator-scored legal uncertainty maps.**
 
-[View Demo](https://alexfanzong.github.io/LUO-subnet-demo/) ·
+[View Demo](https://alexfanzong.github.io/LUO/) ·
 [Miner Entry Contract](public/miner_entry.json) ·
 [Subnet Status](public/subnet_status.json) ·
 [Map Packet Schema](public/map_packet.schema.json)
@@ -37,7 +37,7 @@ The flagship public challenge is `LUO-OUSG-XJ-V1`, an OUSG cross-jurisdiction ma
 
 ## Miner Entry
 
-Miners join by hotkey identity. They receive a compact challenge payload, not the validator's full private corpus.
+Miners join by hotkey identity. They receive a compact challenge payload with a question, jurisdiction scope, corpus manifest, and response schema.
 
 The public challenge shape includes:
 
@@ -47,10 +47,10 @@ The public challenge shape includes:
   "question": "Map OUSG eligibility and transfer boundaries...",
   "required_jurisdictions": ["US", "HK", "SG", "EU"],
   "corpus_manifest": {
-    "manifest_id": "validator-private-ousg-manifest",
+    "manifest_id": "luo-ousg-demo-manifest",
     "schema_uri": "/map_packet.schema.json",
     "as_of_date": "2026-06-07",
-    "corpus_hash_commitment": "<validator_private_hash_commitment>"
+    "corpus_hash_commitment": "<corpus_hash_commitment>"
   }
 }
 ```
@@ -76,43 +76,36 @@ The public demo uses LUO scoring `v1.1`:
 Hard gate:
 
 ```text
-fake source / missing source / synthetic trap hit / mismatched source
+fake source / missing source / mismatched source
   -> zero emission weight
 ```
 
-The demo status file exposes the public-safe runtime result:
+The demo status file exposes the current runtime result:
 
 ```text
 Round: LUO-OUSG-XJ-V1
 Winner UID: 3
 Winner score: 0.9625
-Gate policy: trap hit -> weight 0
+Gate policy: invalid-source hit -> weight 0
 ```
 
-## Public vs Private Boundary
+## Commercial Roadmap
 
-This repository is the public demonstration surface. It contains:
+LUO starts with one narrow wedge: cross-border Web3 products that cannot afford fake legal certainty. Tokenized treasuries, stablecoin flows, custody models, sanctions-sensitive tools, and RWA distribution all share the same problem. Teams need to know where a claim is supported, where jurisdictions diverge, and where a model has filled a gap with confidence.
 
-- React + Vite frontend
-- `public/luo_hero.html`
-- `public/luo_dots.js` as a read-only hero data file
-- public-safe miner entry contract
-- public-safe subnet status
-- public Map Packet schema
-- public sample packet
-- historical ideathon docs and demo assets
+The first commercial users are compliance and product teams preparing market entry decisions. They do not need another chatbot. They need a source-bound packet they can hand to counsel, risk, BD, or an execution system without losing the legal boundary.
 
-This repository must not contain:
+| Stage | Product | Buyer | Output |
+| --- | --- | --- | --- |
+| 1 | Public subnet demo | Builders, hackathon judges, early partners | A live proof that miners can submit legal uncertainty maps and validators can score them. |
+| 2 | Benchmark rounds | RWA issuers, compliance teams, exchanges, custodians | Case-specific map packets for products such as tokenized treasuries, stablecoins, custody, and sanctions screening. |
+| 3 | Review dashboard | Legal, risk, and product teams | A workspace for comparing jurisdictions, citations, unresolved gaps, and downstream-use limits. |
+| 4 | API and packet layer | AI agent platforms, compliance tooling, and protocol teams | Machine-readable map packets that downstream systems can consume before execution. |
+| 5 | Production subnet | Bittensor miners, validators, and enterprise customers | A market for source-backed legal map formation, with validator weights tied to citation validity and divergence fidelity. |
 
-- production corpus files
-- synthetic trap files
-- answer keys
-- validator scoring internals
-- benchmark outputs with hidden evidence
-- wallet, hotkey, seed phrase, private key, test TAO, API key, or `.env` files
-- screenshots, raw agent state, or unpublished private notes
+LUO can earn revenue before the full subnet is live. The near-term product is a paid benchmark and review workflow for high-value Web3 legal questions. The medium-term product is an API that returns reviewed Map Packets. The long-term product is a subnet where miners compete to form useful legal maps and validators reward packets that stay inside the evidence boundary.
 
-The production corpus, synthetic traps, answer keys, validator internals, benchmark outputs, and deployment notes stay validator-private.
+The wedge is narrow on purpose. LUO should first become the best way to map legal uncertainty for programmable compliance. Once that loop works, the same packet format can support market-entry review, RWA onboarding, exchange listing checks, agent preflight, and compliance receipts.
 
 ## Local Development
 
@@ -162,6 +155,6 @@ The Vite build uses relative asset paths so the generated static bundle can be s
 
 ## Status
 
-This repo is public-safe demonstration code. It is not legal advice and does not publish validator-private evaluation assets.
+This repository is a demonstration build. It is not legal advice.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

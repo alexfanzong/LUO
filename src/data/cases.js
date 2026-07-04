@@ -11,8 +11,8 @@ export const cases = {
           { id: 'HK-01', title: 'SFC tokenised securities circular', jurisdiction: 'Hong Kong', url: 'https://apps.sfc.hk/edistributionWeb/api/circular/openFile?lang=EN&refNo=26EC23' },
           { id: 'SG-01', title: 'MAS restricted-CIS notification context', jurisdiction: 'Singapore', url: 'https://eservices.mas.gov.sg/cisnet/home/CISNetHome.action', citationStatus: 'text_verified_limited_scope' },
           { id: 'EU-01', title: 'MiCA financial-instrument boundary', jurisdiction: 'European Union', url: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32023R1114' },
-          { id: 'SYN-01', title: 'Fake SFC retail approval', jurisdiction: 'Trap Set', trap: true },
-          { id: 'SYN-02', title: 'Fake MiCA OUSG classification', jurisdiction: 'Trap Set', trap: true }
+          { id: 'SYN-01', title: 'Fake SFC retail approval', jurisdiction: 'Invalid-Source Check', invalidSource: true },
+          { id: 'SYN-02', title: 'Fake MiCA OUSG classification', jurisdiction: 'Invalid-Source Check', invalidSource: true }
         ],
         nodes: [
           { id: 'US', state: 'restricted', role: 'accepted', x: '42%', y: '35%' },
@@ -30,7 +30,7 @@ export const cases = {
         stageDetail: [
           'The source universe is bounded before any downstream agent can rely on it.',
           'Miner A preserves restriction, conditionality, silence, and classification gaps.',
-          'Synthetic traps are hard-gate canaries, not a standalone score dimension.',
+          'Invalid-source checks are hard-gate canaries, not a standalone score dimension.',
           'The output is not an answer box. It is a source-backed map packet.'
         ],
         validator: {
@@ -46,7 +46,7 @@ export const cases = {
         miners: [
           { id: 'Miner A', score: '0.96', status: 'Accepted', note: 'preserves source boundaries' },
           { id: 'Miner B', score: '0.60', status: 'Review', note: 'overreads conditional route' },
-          { id: 'Miner C', score: '0.25', status: 'Trap', note: 'cites fake MiCA source' }
+          { id: 'Miner C', score: '0.25', status: 'Gated', note: 'cites fake MiCA source' }
         ],
         packet: { id: 'LUO-OUSG-XJ-202606-0001', route: 'Miner A · OUSG map', score: '0.96' },
         output: {
@@ -65,12 +65,12 @@ export const cases = {
         sources: [
           { id: 'HK-01', title: 'SFC tokenised securities circular', jurisdiction: 'Hong Kong', url: 'https://apps.sfc.hk/edistributionWeb/api/circular/openFile?lang=EN&refNo=26EC23' },
           { id: 'ONDO-01', title: 'OUSG qualified-access docs', jurisdiction: 'Product', url: 'https://docs.ondo.finance/qualified-access-products/ousg/eligibility-and-onboarding' },
-          { id: 'SYN-01', title: 'Fake SFC retail approval', jurisdiction: 'Trap Set', trap: true }
+          { id: 'SYN-01', title: 'Fake SFC retail approval', jurisdiction: 'Invalid-Source Check', invalidSource: true }
         ],
         nodes: [
           { id: 'HK', state: 'conditional', role: 'lead', x: '50%', y: '52%' },
           { id: 'OUSG', state: 'restricted', role: 'accepted', x: '42%', y: '35%' },
-          { id: 'REF', state: 'refused', role: 'trap', x: '69%', y: '68%' }
+          { id: 'REF', state: 'refused', role: 'invalidSource', x: '69%', y: '68%' }
         ],
         routes: ['HK-OUSG', 'HK-REF'],
         stageCopy: [
@@ -98,7 +98,7 @@ export const cases = {
         miners: [
           { id: 'Miner A', score: '0.94', status: 'Accepted', note: 'scope bounded' },
           { id: 'Miner B', score: '0.60', status: 'Review', note: 'adds unsupported route' },
-          { id: 'Miner C', score: '0.18', status: 'Trap', note: 'fabricates retail approval' }
+          { id: 'Miner C', score: '0.18', status: 'Gated', note: 'fabricates retail approval' }
         ],
         packet: { id: 'LUO-OUSG-HK-202606-0002', route: 'Miner A · HK boundary', score: '0.94' },
         output: {
@@ -123,8 +123,8 @@ export const cases = {
           { id: 'NL-01', title: 'Pertsev criminal-liability path', jurisdiction: 'Netherlands', url: 'https://uitspraken.rechtspraak.nl/details?id=ECLI:NL:RBOBR:2024:2069' },
           { id: 'CH-01', title: 'Swiss AML / sanctions context', jurisdiction: 'Switzerland', url: 'https://finma.ch/~/media/finma/dokumente/dokumentencenter/myfinma/1bewilligung/fintech/wegleitung-ico.pdf' },
           { id: 'HK-04', title: 'SFC unilateral-sanctions soft-follow signal', jurisdiction: 'Hong Kong', url: 'https://www.sfc.hk/-/media/EN/assets/components/codes/files-current/web/guidelines/guideline-on-anti-money-laundering-and-counter-financing-of-terrorism-for-licensed-corporations/AML-Guideline-for-LCs-and-SFC-licensed-VASPs_Eng_1-Jun-2023.pdf' },
-          { id: 'SYN-03', title: 'Fake FinCEN Tornado guidance', jurisdiction: 'Trap Set', trap: true },
-          { id: 'SYN-04', title: 'Fake FINMA Tornado circular', jurisdiction: 'Trap Set', trap: true }
+          { id: 'SYN-03', title: 'Fake FinCEN Tornado guidance', jurisdiction: 'Invalid-Source Check', invalidSource: true },
+          { id: 'SYN-04', title: 'Fake FINMA Tornado circular', jurisdiction: 'Invalid-Source Check', invalidSource: true }
         ],
         nodes: [
           { id: 'US', state: 'split', role: 'lead', x: '42%', y: '36%' },
@@ -134,7 +134,7 @@ export const cases = {
         ],
         routes: ['US-NL', 'US-CH', 'CH-HK'],
         stageCopy: [
-          'Real sources and synthetic traps enter together.',
+          'Real sources and invalid-source checks enter together.',
           'Miners propose divergent jurisdiction maps.',
           'Validator checks source validity before scoring whether silence stays silent.',
           'The winner preserves divergence, not consensus theater.'
@@ -158,7 +158,7 @@ export const cases = {
         miners: [
           { id: 'Miner A', score: '0.985', status: 'Accepted', note: 'preserves divergence' },
           { id: 'Miner B', score: '0.60', status: 'Review', note: 'compresses Swiss silence' },
-          { id: 'Miner C', score: '0.25', status: 'Trap', note: 'cites fake FINMA' }
+          { id: 'Miner C', score: '0.25', status: 'Gated', note: 'cites fake FINMA' }
         ],
         packet: { id: 'LUO-TC-XJ-202605-0001', route: 'Miner A · divergence map', score: '0.985' },
         output: {
@@ -176,17 +176,17 @@ export const cases = {
         request: 'Map only the Swiss source boundary and avoid fake FINMA certainty.',
         sources: [
           { id: 'CH-01', title: 'Swiss AML / sanctions context', jurisdiction: 'Switzerland', url: 'https://finma.ch/~/media/finma/dokumente/dokumentencenter/myfinma/1bewilligung/fintech/wegleitung-ico.pdf' },
-          { id: 'SYN-04', title: 'Fake FINMA Tornado circular', jurisdiction: 'Trap Set', trap: true },
-          { id: 'SYN-01', title: 'Fake UNSC sanctions bulletin', jurisdiction: 'Trap Set', trap: true }
+          { id: 'SYN-04', title: 'Fake FINMA Tornado circular', jurisdiction: 'Invalid-Source Check', invalidSource: true },
+          { id: 'SYN-01', title: 'Fake UNSC sanctions bulletin', jurisdiction: 'Invalid-Source Check', invalidSource: true }
         ],
         nodes: [
           { id: 'CH', state: 'silent', role: 'lead', x: '50%', y: '52%' },
-          { id: 'TRAP', state: 'refused', role: 'trap', x: '70%', y: '35%' },
+          { id: 'CHECK', state: 'refused', role: 'invalidSource', x: '70%', y: '35%' },
           { id: 'OUT', state: 'review', role: 'review', x: '42%', y: '69%' }
         ],
-        routes: ['CH-TRAP', 'CH-OUT'],
+        routes: ['CH-CHECK', 'CH-OUT'],
         stageCopy: [
-          'Swiss source pack enters with traps.',
+          'Swiss source pack enters with checks.',
           'Miners decide whether to preserve silence.',
           'Validator hard-gates fake FINMA certainty.',
           'Accepted packet routes downstream use to review.'
@@ -194,7 +194,7 @@ export const cases = {
         stageDetail: [
           'Single-jurisdiction does not mean certainty.',
           'The best miner refuses the fake circular.',
-          'Trap hits cap final score even if raw reasoning looks polished.',
+          'Invalid-source hits cap final score even if raw reasoning looks polished.',
           'The output is a silence map, not a permission claim.'
         ],
         validator: {
@@ -210,14 +210,14 @@ export const cases = {
         miners: [
           { id: 'Miner A', score: '0.95', status: 'Accepted', note: 'preserves silence' },
           { id: 'Miner B', score: '0.60', status: 'Review', note: 'overstates Swiss path' },
-          { id: 'Miner C', score: '0.08', status: 'Trap', note: 'uses fake circular' }
+          { id: 'Miner C', score: '0.08', status: 'Gated', note: 'uses fake circular' }
         ],
         packet: { id: 'LUO-TC-CH-202605-0002', route: 'Miner A · Swiss silence', score: '0.95' },
         output: {
           title: 'Tornado Cash Switzerland Silence Map',
           entries: [
             { jurisdiction: 'CH', state: 'Silent', claim: 'Swiss materials provide general context, not a Tornado-specific position.', sources: 'CH-01' },
-            { jurisdiction: 'Trap', state: 'Avoided', claim: 'Fake FINMA and fake UNSC sources are rejected.', sources: 'SYN-04 avoided · SYN-01 avoided' },
+            { jurisdiction: 'Rejected Source', state: 'Avoided', claim: 'Fake FINMA and fake UNSC sources are rejected.', sources: 'SYN-04 avoided · SYN-01 avoided' },
             { jurisdiction: 'Boundary', state: 'Review', claim: 'Downstream use should route to review instead of fabricated certainty.', sources: 'Citation · Divergence · Reasoning · Coverage checks' }
           ]
         }

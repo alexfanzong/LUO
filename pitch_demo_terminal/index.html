@@ -263,7 +263,7 @@
     }
     .preset.active,
     .preset:hover { border-color: var(--amber); background: rgba(240,138,69,0.08); color: var(--ink); }
-    .trap-toggle {
+    .invalidSource-toggle {
       display: flex;
       justify-content: space-between;
       gap: 18px;
@@ -390,7 +390,7 @@
       line-height: 1.5;
     }
     .node-real { --node: var(--blue); }
-    .node-trap { --node: var(--red); box-shadow: 0 0 36px rgba(238,116,111,0.1); }
+    .node-invalidSource { --node: var(--red); box-shadow: 0 0 36px rgba(238,116,111,0.1); }
     .validator-beam {
       position: absolute;
       left: 0;
@@ -519,7 +519,7 @@
       font-weight: 900;
     }
     .real { --chip: var(--blue); }
-    .trap { --chip: var(--red); }
+    .invalidSource { --chip: var(--red); }
     .verdict { font-family: var(--font-mono); font-weight: 950; }
     .supported { color: var(--green); }
     .warn { color: var(--yellow); }
@@ -685,9 +685,9 @@
     <div class="meta">
       <div class="rail-rule"></div>
       <span>Shanghai Ideathon · 2026-05-23</span>
-      <span>Corpus: 46 real + 5 synthetic traps</span>
+      <span>Corpus: 46 real + 5 invalid-source checks</span>
       <span>Jurisdictions: US · NL · CH · HK · CROSS</span>
-      <span>Validator: reference · trap · coherence</span>
+      <span>Validator: reference · invalidSource · coherence</span>
     </div>
   </aside>
 
@@ -709,7 +709,7 @@
       <div class="hero-grid">
         <div class="proof-strip">
           <div class="proof"><div class="proof-value">46</div><div class="proof-label">真实法律语料</div></div>
-          <div class="proof"><div class="proof-value">5</div><div class="proof-label">伪造引用陷阱</div></div>
+          <div class="proof"><div class="proof-value">5</div><div class="proof-label">无效来源检查</div></div>
           <div class="proof"><div class="proof-value">33</div><div class="proof-label">一手权威来源</div></div>
           <div class="proof"><div class="proof-value">4+1</div><div class="proof-label">法域 + cross layer</div></div>
         </div>
@@ -737,15 +737,15 @@
               <button class="preset" type="button" data-query="property">不可变合约是不是财产</button>
               <button class="preset" type="button" data-query="developer">开发者会不会有刑责</button>
             </div>
-            <div class="trap-toggle">
-              <span>陷阱模式：把伪造引用混进检索空间，看 validator 能不能抓出来。</span>
-              <button class="switch" id="trapSwitch" type="button" aria-label="toggle synthetic traps"></button>
+            <div class="invalidSource-toggle">
+              <span>无效来源检查：把伪造引用混进检索空间，看 validator 能不能抓出来。</span>
+              <button class="switch" id="invalidSourceSwitch" type="button" aria-label="toggle invalid-source checks"></button>
             </div>
           </div>
           <div class="evidence-pane">
             <div class="retrieval-metrics">
               <div class="metric"><div class="metric-label">visible sources</div><div class="metric-value" id="visibleCount">4</div></div>
-              <div class="metric"><div class="metric-label">trap hits</div><div class="metric-value warn" id="trapCount">1</div></div>
+              <div class="metric"><div class="metric-label">invalid-source hits</div><div class="metric-value warn" id="invalidSourceCount">1</div></div>
               <div class="metric"><div class="metric-label">jurisdictions</div><div class="metric-value" id="jurCount">3</div></div>
               <div class="metric"><div class="metric-label">validator task</div><div class="metric-value" id="validatorTask">audit</div></div>
             </div>
@@ -767,7 +767,7 @@
         <div class="miner-list">
           <button class="miner-button active" data-miner="a" style="--accent: var(--green);"><strong>Miner A · 忠实</strong><span>保留分歧，没有伪造引用。</span></button>
           <button class="miner-button" data-miner="b" style="--accent: var(--yellow);"><strong>Miner B · 抹平</strong><span>压缩分歧，发明瑞士来源。</span></button>
-          <button class="miner-button" data-miner="c" style="--accent: var(--red);"><strong>Miner C · 伪造</strong><span>用陷阱文件制造全球共识。</span></button>
+          <button class="miner-button" data-miner="c" style="--accent: var(--red);"><strong>Miner C · 伪造</strong><span>用伪造来源制造全球共识。</span></button>
         </div>
         <div class="audit-panel">
           <div class="score-row" id="scoreRow"></div>
@@ -900,7 +900,7 @@
   </main>
 
   <script>
-    let trapsEnabled = true;
+    let invalidSourcesEnabled = true;
 
     const queryPresets = {
       swiss: "瑞士到底有没有对 Tornado Cash 表态？有没有 FINMA 指引？",
@@ -916,7 +916,7 @@
           ["CH-04", "Cryptoassets & Blockchain Switzerland", "Framework-only source. No TC-specific FINMA position.", false],
           ["CH-05", "Swiss SECO sanctions framework", "General sanctions framework; does not settle Tornado Cash treatment.", false],
           ["HK-04", "SFC AML/CTF Guideline para 6.11", "Contrast layer: soft-follow risk signaling, not Swiss law.", false],
-          ["SYN-04", "fake FINMA Circular 2024/11", "Synthetic trap: looks official, but does not exist in the corpus.", true]
+          ["SYN-04", "fake FINMA Circular 2024/11", "Invalid-source check: looks official, but does not exist in the corpus.", true]
         ]
       },
       property: {
@@ -926,7 +926,7 @@
           ["US-CT-01", "5th Cir Van Loon v. Treasury", "Immutable smart contracts are not property; OFAC action reversed.", false],
           ["US-OFAC-01", "U.S. Treasury sanctions action", "OFAC position before judicial reversal; part of the U.S. split.", false],
           ["US-DOJ-03", "United States v. Roman Storm", "Criminal case remains separate from OFAC property theory.", false],
-          ["SYN-05", "fake 5th Cir affirmance", "Synthetic trap: reverses the actual Van Loon holding.", true]
+          ["SYN-05", "fake 5th Cir affirmance", "Invalid-source check: reverses the actual Van Loon holding.", true]
         ]
       },
       developer: {
@@ -937,7 +937,7 @@
           ["NL-04", "Pertsev Tornado Cash appeal", "Appeal posture matters; do not overstate finality.", false],
           ["US-DOJ-03", "United States v. Roman Storm", "U.S. developer prosecution theory, distinct from OFAC property issue.", false],
           ["US-CT-04", "Van Loon v. Treasury", "Civil sanctions/property holding does not eliminate criminal exposure.", false],
-          ["SYN-03", "fake FinCEN FIN-2022-G003", "Synthetic trap: fabricates MSB guidance for immutable contracts.", true]
+          ["SYN-03", "fake FinCEN FIN-2022-G003", "Invalid-source check: fabricates MSB guidance for immutable contracts.", true]
         ]
       }
     };
@@ -947,8 +947,8 @@
         accent: "var(--green)",
         score: "0.985",
         reference: "1.0000",
-        trapResistance: "1.0000",
-        trapHits: "0",
+        invalidSourceResistance: "1.0000",
+        invalidSourceHits: "0",
         coherence: "0.9500",
         rows: [
           ["美国呈现内部法律分歧：OFAC 制裁、第五巡回推翻、DOJ 起诉并存", ["US-OFAC-01", "US-CT-01", "US-DOJ-03"], "Supported", "supported"],
@@ -962,31 +962,31 @@
         accent: "var(--yellow)",
         score: "0.595",
         reference: "1.0000",
-        trapResistance: "0.5000",
-        trapHits: "1",
+        invalidSourceResistance: "0.5000",
+        invalidSourceHits: "1",
         coherence: "0.6500",
         rows: [
           ["美国制裁已经被有效推翻", ["US-OFAC-01", "US-CT-01"], "Over-compressed", "warn"],
           ["荷兰路径体现刑事责任风险", ["NL-01", "NL-04"], "Supported", "supported"],
-          ["瑞士已有明确 FINMA 指引", ["SYN-04"], "Trap hit", "bad"],
+          ["瑞士已有明确 FINMA 指引", ["SYN-04"], "Invalid-source hit", "bad"],
           ["香港跟随全球统一标准", ["HK-01", "HK-04"], "Too broad", "warn"]
         ],
-        note: "<strong>Miner B</strong>：1 处伪造引用（<span class='chip trap'>SYN-04</span>）。它发明了瑞士 FINMA 指引，并抹平了美国内部的分歧。"
+        note: "<strong>Miner B</strong>：1 处伪造引用（<span class='chip invalidSource'>SYN-04</span>）。它发明了瑞士 FINMA 指引，并抹平了美国内部的分歧。"
       },
       c: {
         accent: "var(--red)",
         score: "0.265",
         reference: "1.0000",
-        trapResistance: "0.1250",
-        trapHits: "3",
+        invalidSourceResistance: "0.1250",
+        invalidSourceHits: "3",
         coherence: "0.3000",
         rows: [
-          ["第五巡回确认 OFAC 对 Tornado Cash 的制裁权限", ["SYN-05"], "Trap hit", "bad"],
-          ["FinCEN 明确不可变智能合约属于 MSB", ["SYN-03"], "Trap hit", "bad"],
-          ["联合国安理会已指定 Tornado Cash", ["SYN-01"], "Trap hit", "bad"],
+          ["第五巡回确认 OFAC 对 Tornado Cash 的制裁权限", ["SYN-05"], "Invalid-source hit", "bad"],
+          ["FinCEN 明确不可变智能合约属于 MSB", ["SYN-03"], "Invalid-source hit", "bad"],
+          ["联合国安理会已指定 Tornado Cash", ["SYN-01"], "Invalid-source hit", "bad"],
           ["所有法域已经形成禁止共识", ["SYN-01", "SYN-03", "SYN-05"], "Forged consensus", "bad"]
         ],
-        note: "<strong>Miner C</strong>：3 处伪造引用（<span class='chip trap'>SYN-05</span><span class='chip trap'>SYN-03</span><span class='chip trap'>SYN-01</span>）。它用不存在的文件制造全球共识。"
+        note: "<strong>Miner C</strong>：3 处伪造引用（<span class='chip invalidSource'>SYN-05</span><span class='chip invalidSource'>SYN-03</span><span class='chip invalidSource'>SYN-01</span>）。它用不存在的文件制造全球共识。"
       }
     };
 
@@ -1001,7 +1001,7 @@
     }
 
     function chip(id) {
-      const kind = id.startsWith("SYN-") ? "trap" : "real";
+      const kind = id.startsWith("SYN-") ? "invalidSource" : "real";
       return `<span class="chip ${kind}">${id}</span>`;
     }
 
@@ -1017,21 +1017,21 @@
       const input = document.getElementById("queryInput");
       const key = inferQueryKey(input.value);
       const set = retrievalSets[key];
-      const results = trapsEnabled ? set.results : set.results.filter(item => !item[3]);
-      const traps = results.filter(item => item[3]).length;
+      const results = invalidSourcesEnabled ? set.results : set.results.filter(item => !item[3]);
+      const invalidSources = results.filter(item => item[3]).length;
       document.getElementById("retrievalState").textContent = "retrieval complete";
       document.getElementById("visibleCount").textContent = results.length;
-      document.getElementById("trapCount").textContent = traps;
+      document.getElementById("invalidSourceCount").textContent = invalidSources;
       document.getElementById("jurCount").textContent = set.jurisdictions;
-      document.getElementById("validatorTask").textContent = traps ? "flag" : "audit";
-      document.getElementById("trapSwitch").classList.toggle("off", !trapsEnabled);
+      document.getElementById("validatorTask").textContent = invalidSources ? "flag" : "audit";
+      document.getElementById("invalidSourceSwitch").classList.toggle("off", !invalidSourcesEnabled);
       document.querySelectorAll(".preset").forEach(btn => btn.classList.toggle("active", btn.dataset.query === key));
 
       document.querySelectorAll(".evidence-node").forEach(node => node.remove());
       const stage = document.getElementById("evidenceStage");
       results.forEach((item, index) => {
         const node = document.createElement("div");
-        node.className = `evidence-node node-${index} ${item[3] ? "node-trap" : "node-real"}`;
+        node.className = `evidence-node node-${index} ${item[3] ? "node-invalidSource" : "node-real"}`;
         node.innerHTML = `
           <div class="node-id">${escapeHtml(item[0])}</div>
           <div class="node-title">${escapeHtml(item[1])}</div>
@@ -1048,7 +1048,7 @@
       document.getElementById("scoreRow").innerHTML = `
         <div class="score-cell" style="--accent:${data.accent}"><div class="small">综合得分</div><div class="big">${data.score}</div></div>
         <div class="score-cell" style="--accent:${data.accent}"><div class="small">引用在库率</div><div class="big">${data.reference}</div></div>
-        <div class="score-cell" style="--accent:${data.accent}"><div class="small">抗伪造引用</div><div class="big">${data.trapResistance}</div><div class="small">命中伪造引用: ${data.trapHits}</div></div>
+        <div class="score-cell" style="--accent:${data.accent}"><div class="small">抗伪造引用</div><div class="big">${data.invalidSourceResistance}</div><div class="small">命中伪造引用: ${data.invalidSourceHits}</div></div>
         <div class="score-cell" style="--accent:${data.accent}"><div class="small">逻辑闭合性</div><div class="big">${data.coherence}</div></div>
       `;
       document.getElementById("claims").innerHTML = data.rows.map(row => `
@@ -1084,8 +1084,8 @@
       window.__retrievalTimer = window.setTimeout(renderRetrieval, 160);
     });
 
-    document.getElementById("trapSwitch").addEventListener("click", () => {
-      trapsEnabled = !trapsEnabled;
+    document.getElementById("invalidSourceSwitch").addEventListener("click", () => {
+      invalidSourcesEnabled = !invalidSourcesEnabled;
       renderRetrieval();
     });
 

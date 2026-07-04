@@ -1019,7 +1019,7 @@ a {
   background: rgba(255, 255, 255, 0.055);
 }
 
-.source.trap {
+.source.invalidSource {
   opacity: 0.62;
   border-style: dashed;
 }
@@ -1243,7 +1243,7 @@ a {
   font-size: 13px;
 }
 
-.map-node.trap {
+.map-node.invalidSource {
   border-style: dashed;
   opacity: 0.72;
 }
