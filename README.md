@@ -4,9 +4,9 @@
 
 <img src="public/luo-wordmark.png" alt="Legal Uncertainty Oracle (LUO) logo" width="160">
 
-# LUO
+# Legal Uncertainty Oracle
 
-**Legal Uncertainty Oracle. A Bittensor testnet subnet runtime for validator-scored legal uncertainty maps.**
+**LUO is a Bittensor testnet subnet runtime for validator-scored legal uncertainty maps.**
 
 [View Demo](https://alexfanzong.github.io/LUO/) ·
 [Miner Entry Contract](public/miner_entry.json) ·
