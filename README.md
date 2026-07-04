@@ -1,8 +1,8 @@
-<a id="readme-top"></a>
-
 <div align="center">
 
 <img src="public/luo-wordmark.png" alt="Legal Uncertainty Oracle (LUO) logo" width="160">
+
+<a id="readme-top"></a>
 
 # Legal Uncertainty Oracle
 
