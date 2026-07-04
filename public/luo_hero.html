@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUO — Legal Uncertainty Oracle</title>
+<style>
+  :root{
+    --bg:#050505;
+    --ink:#f5f5f3;
+    --ink-dim:#a8a8a4;
+    --ink-faint:#63635f;
+    --line:#242422;
+    --card-bg:rgba(7,7,7,.88);
+    --card-line:#3d3d3a;
+    --mono:"SF Mono","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+    --sans:"Helvetica Neue",Helvetica,Arial,-apple-system,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);overflow-x:hidden}
+
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+  nav{
+    position:relative;z-index:30;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 48px;
+  }
+  .logo{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink)}
+  .logo img{display:block;width:72px;height:auto}
+  .nav-links{display:flex;gap:42px;list-style:none}
+  .nav-links a{color:var(--ink-dim);text-decoration:none;font-size:15px;transition:color .2s}
+  .nav-links a:hover,.nav-links a:focus-visible{color:var(--ink)}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:14px;font-weight:500;
+    padding:12px 22px;border-radius:6px;cursor:pointer;text-decoration:none;
+    border:1px solid var(--ink);transition:all .2s;
+  }
+  .btn-solid{background:var(--ink);color:#0a0a0a}
+  .btn-solid:hover{background:#fff;transform:translateY(-1px)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--card-line)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn .arrow{font-size:12px;transform:translateY(-1px)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+  .atlas{position:absolute;inset:0;z-index:1;pointer-events:none}
+  .atlas::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:132px;z-index:2;
+    background:linear-gradient(180deg,rgba(5,5,5,.94),rgba(5,5,5,.66) 52%,transparent);
+  }
+  #mapCanvas{
+    position:absolute;
+    top:clamp(96px,12vh,132px);
+    right:-2%;
+    width:78%;
+    height:calc(100% - clamp(172px,22vh,224px));
+  }
+  .atlas-label{
+    position:absolute;top:92px;right:48px;z-index:15;
+    font-family:var(--mono);font-size:11px;letter-spacing:.38em;color:var(--ink-faint);
+  }
+  .atlas-label .frame{margin-left:10px;letter-spacing:0}
+
+  .jcard{
+    position:absolute;z-index:10;
+    background:var(--card-bg);border:1px solid var(--card-line);
+    padding:13px 17px;min-width:190px;
+    opacity:0;transform:translateY(6px);
+    animation:fadeUp .7s ease forwards;
+  }
+  .jcard .jhead{display:flex;align-items:baseline;gap:10px;margin-bottom:7px}
+  .jcard .jcode{font-family:var(--mono);font-weight:700;font-size:17px}
+  .jcard .jstatus{font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+  .jcard .jcoord{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-bottom:5px}
+  .jcard .jmeta{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint)}
+  .jcard .jmeta b{color:var(--ink-dim);font-weight:500}
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+  .copy{position:relative;z-index:20;max-width:660px;padding:34px 48px 0}
+  h1{
+    font-size:clamp(58px,7.8vw,126px);
+    font-weight:800;line-height:.9;letter-spacing:-.02em;
+    text-transform:uppercase;margin-bottom:34px;
+  }
+  h1 .line{display:block;opacity:0;transform:translateY(14px);animation:fadeUp .8s ease forwards}
+  h1 .line:nth-child(2){animation-delay:.08s}
+  h1 .line:nth-child(3){animation-delay:.16s}
+  .lede{
+    font-size:17.5px;line-height:1.6;color:var(--ink-dim);
+    max-width:470px;margin-bottom:38px;
+    opacity:0;animation:fadeUp .8s ease .3s forwards;
+  }
+  .cta-row{display:flex;gap:16px;opacity:0;animation:fadeUp .8s ease .42s forwards}
+
+  .metabar{
+    position:relative;z-index:20;margin-top:auto;
+    display:grid;grid-template-columns:repeat(4,minmax(150px,max-content));
+    gap:0;width:min(100%,1060px);padding:0 48px 32px;
+  }
+  .mcell{min-width:0;padding:0 clamp(22px,2.8vw,42px);border-left:1px solid var(--line)}
+  .mcell:first-child{padding-left:0;border-left:none}
+  .mcell .mk{font-family:var(--mono);font-size:10px;letter-spacing:.32em;color:var(--ink-faint);margin-bottom:9px}
+  .mcell .mv{font-family:var(--mono);font-size:clamp(12px,1.05vw,14px);letter-spacing:.16em;color:var(--ink);white-space:nowrap}
+
+  @media(max-width:1100px){
+    #mapCanvas{top:108px;width:110%;height:calc(100% - 210px);opacity:.4}
+    .jcard{display:none}
+    .metabar{grid-template-columns:repeat(2,minmax(150px,1fr));gap:22px 0;width:100%}
+    .mcell:nth-child(odd){padding-left:0;border-left:none}
+  }
+  @media(max-width:720px){
+    nav{padding:20px 24px}
+    .nav-links{display:none}
+    .copy{padding:24px 24px 0}
+    h1{font-size:clamp(44px,13vw,56px);letter-spacing:-.045em}
+    .lede{font-size:16px;max-width:340px}
+    .metabar{grid-template-columns:1fr 1fr;gap:20px 0;padding:0 24px 28px}
+    .mcell{border:none;padding:0}
+    .mcell .mv{white-space:normal;line-height:1.35}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms!important;animation-delay:0ms!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <nav>
+    <a class="logo" href="#top" target="_parent" aria-label="LUO Legal Uncertainty Oracle">
+      <img src="luo-wordmark.png" alt="">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#product" target="_parent">Product</a></li>
+      <li><a href="#mechanism" target="_parent">Mechanism</a></li>
+      <li><a href="#cases" target="_parent">Cases</a></li>
+      <li><a href="#sources" target="_parent">Sources</a></li>
+      <li><a href="#scoring" target="_parent">Scoring</a></li>
+    </ul>
+    <a class="btn btn-solid" href="#demo" target="_parent">Map a Question <span class="arrow">↗</span></a>
+  </nav>
+
+  <div class="atlas"><canvas id="mapCanvas"></canvas></div>
+  <div class="atlas-label">GRID SCAN ATLAS <span class="frame">⛶</span></div>
+
+  <div class="jcard" data-anchor="US" style="animation-delay:.5s">
+    <div class="jhead"><span class="jcode">US</span><span class="jstatus">split</span></div>
+    <div class="jcoord">38.9072° N, 77.0369° W</div>
+    <div class="jmeta">sources: <b>12</b> &nbsp;|&nbsp; traps: <b>3</b></div>
+  </div>
+  <div class="jcard" data-anchor="HK" style="animation-delay:.65s">
+    <div class="jhead"><span class="jcode">HK</span><span class="jstatus">conditional</span></div>
+    <div class="jcoord">22.3193° N, 114.1694° E</div>
+    <div class="jmeta">sources: <b>9</b> &nbsp;|&nbsp; traps: <b>2</b></div>
+  </div>
+  <div class="jcard" data-anchor="EU" style="animation-delay:.8s">
+    <div class="jhead"><span class="jcode">EU</span><span class="jstatus">gap</span></div>
+    <div class="jcoord">50.1109° N, 8.6821° E</div>
+    <div class="jmeta">sources: <b>8</b> &nbsp;|&nbsp; traps: <b>4</b></div>
+  </div>
+  <div class="jcard" data-anchor="SG" style="animation-delay:.95s">
+    <div class="jhead"><span class="jcode">SG</span><span class="jstatus">narrow</span></div>
+    <div class="jcoord">1.3521° N, 103.8198° E</div>
+    <div class="jmeta">sources: <b>7</b> &nbsp;|&nbsp; traps: <b>1</b></div>
+  </div>
+
+  <div class="copy">
+    <h1>
+      <span class="line">Legal</span>
+      <span class="line">Uncertainty</span>
+      <span class="line">Oracle</span>
+    </h1>
+    <p class="lede">
+      LUO is a Bittensor subnet that turns legal sources into
+      validator-scored uncertainty map packets. Miners produce
+      jurisdiction-aware maps. Validators reward the packets that
+      preserve source boundaries instead of fabricating certainty.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-solid" href="#demo" target="_parent">Map a Question <span class="arrow">↗</span></a>
+      <a class="btn btn-ghost" href="#cases" target="_parent">Benchmark Cases</a>
+    </div>
+  </div>
+
+  <div class="metabar">
+    <div class="mcell"><div class="mk">SUBNET</div><div class="mv">LEGAL-ORACLE</div></div>
+    <div class="mcell"><div class="mk">PROTOCOL</div><div class="mv">BITTENSOR</div></div>
+    <div class="mcell"><div class="mk">FOCUS</div><div class="mv">UNCERTAINTY MAPS</div></div>
+    <div class="mcell"><div class="mk">OUTPUT</div><div class="mv">VALIDATOR-SCORED PACKETS</div></div>
+  </div>
+</section>
+
+<script src="luo_dots.js"></script>
+<script>
+function sendParentAnchor(hash) {
+  if (!hash || window.parent === window) return false;
+  window.parent.postMessage({ type: 'luo-anchor', hash }, window.location.origin);
+  return true;
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', event => {
+    const hash = new URL(link.getAttribute('href'), window.location.href).hash;
+    if (!sendParentAnchor(hash)) return;
+    event.preventDefault();
+  });
+});
+
+window.addEventListener('wheel', event => {
+  if (window.parent === window) return;
+  window.parent.postMessage({
+    type: 'luo-wheel',
+    deltaX: event.deltaX,
+    deltaY: event.deltaY
+  }, window.location.origin);
+  event.preventDefault();
+}, { passive: false });
+
+/* =========================================================
+   LUO Hero Atlas v2
+   坐标空间: 0–1000 (lon −180..180) × 0–560 (lat 78..−58)
+   所有可调参数集中在 CONFIG, 不要动 DOTS_RAW
+   ========================================================= */
+const CONFIG = {
+  dotBaseAlpha: [0.30, 0.72],   // 点阵亮度区间
+  dotSizeScale: 1.35,           // 点大小系数
+  beamRatioY: 0.52,             // 光束垂直位置 (占地图高度比例)
+  beamGlow: 14,                 // 光束辉光
+  shimmerSpeed: 0.07,           // 微光扫描速度
+  gridStep: 62,                 // 背景网格间距 (地图坐标)
+  gridAlpha: 0.05,              // 背景网格亮度
+  ambientCount: 26,             // 环境散点方块数量
+  /* 卡片相对锚点的编辑位偏移 (px, 屏幕空间) — 对齐设计稿构图 */
+  cardOffsets: {
+    US: { dx: -30, dy: -122, connector: false },
+    HK: { dx: -50, dy: -128, connector: false },
+    EU: { dx: -95, dy: 335, connector: true },
+    SG: { dx: -70, dy: 52,  connector: true }
+  }
+};
+
+/* 点阵数据由 luo_dots.js 提供 */
+
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const dots = DOTS_RAW.split(' ').map(p => {
+  const [x, y] = p.split(',').map(Number);
+  return { x, y, phase: Math.random() * Math.PI * 2,
+           base: CONFIG.dotBaseAlpha[0] + Math.random() * (CONFIG.dotBaseAlpha[1] - CONFIG.dotBaseAlpha[0]) };
+});
+
+const ANCHORS = {
+  US: { x: 286, y: 161 },
+  EU: { x: 524, y: 115 },
+  HK: { x: 817, y: 229 },
+  SG: { x: 788, y: 316 }
+};
+
+const TRACES = [
+  ['US', { x: 410, y: 205 }, 'EU'],
+  ['EU', { x: 665, y: 185 }, 'HK'],
+  ['HK', { x: 806, y: 278 }, 'SG'],
+  ['US', { x: 350, y: 305 }, { x: 570, y: 365 }, 'SG']
+];
+
+/* 确定性伪随机环境散点 (种子固定, 每次渲染一致) */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rng = mulberry32(20260523);
+const AMBIENT = Array.from({length: CONFIG.ambientCount}, () => ({
+  x: rng() * 1000, y: rng() * 560,
+  s: 3 + rng() * 5, a: 0.12 + rng() * 0.2, filled: rng() > 0.6
+}));
+
+const MAP_W = 1000, MAP_H = 560;
+let scale = 1, offX = 0, offY = 0, dpr = 1;
+
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  scale = Math.min(rect.width / MAP_W, rect.height / MAP_H);
+  offX = (rect.width - MAP_W * scale) / 2;
+  offY = (rect.height - MAP_H * scale) / 2;
+  positionCards();
+}
+
+function toScreen(p) { return { x: offX + p.x * scale, y: offY + p.y * scale }; }
+
+function positionCards() {
+  const canvasBox = canvas.getBoundingClientRect();
+  const heroBox = canvas.closest('.hero').getBoundingClientRect();
+  document.querySelectorAll('.jcard').forEach(card => {
+    const key = card.dataset.anchor;
+    const a = ANCHORS[key], o = CONFIG.cardOffsets[key];
+    if (!a || !o) return;
+    const s = toScreen(a);
+    card.style.left = (canvasBox.left - heroBox.left + s.x + o.dx) + 'px';
+    card.style.top  = (canvasBox.top - heroBox.top + s.y + o.dy) + 'px';
+  });
+}
+
+function resolveTrace(t) { return t.map(p => typeof p === 'string' ? ANCHORS[p] : p); }
+
+let t0 = performance.now();
+
+function draw(now) {
+  const t = (now - t0) / 1000;
+  const rect = canvas.getBoundingClientRect();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, rect.width, rect.height);
+
+  /* --- 背景网格 --- */
+  ctx.strokeStyle = `rgba(255,255,255,${CONFIG.gridAlpha})`;
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  for (let gx = 0; gx <= MAP_W; gx += CONFIG.gridStep) {
+    const s = toScreen({ x: gx, y: 0 });
+    ctx.moveTo(s.x, offY); ctx.lineTo(s.x, offY + MAP_H * scale);
+  }
+  for (let gy = 0; gy <= MAP_H; gy += CONFIG.gridStep) {
+    const s = toScreen({ x: 0, y: gy });
+    ctx.moveTo(offX, s.y); ctx.lineTo(offX + MAP_W * scale, s.y);
+  }
+  ctx.stroke();
+
+  /* --- 环境散点方块 --- */
+  for (const m of AMBIENT) {
+    const s = toScreen(m);
+    ctx.strokeStyle = `rgba(200,200,196,${m.a})`;
+    ctx.fillStyle = `rgba(200,200,196,${m.a})`;
+    ctx.lineWidth = 0.8;
+    m.filled ? ctx.fillRect(s.x, s.y, m.s, m.s) : ctx.strokeRect(s.x, s.y, m.s, m.s);
+  }
+
+  const beamY = offY + MAP_H * scale * CONFIG.beamRatioY;
+  const shimmerX = offX + ((reduceMotion ? 0.5 : (t * CONFIG.shimmerSpeed) % 1.2)) * MAP_W * scale;
+
+  /* --- 点阵 --- */
+  const r = Math.max(scale * CONFIG.dotSizeScale, 1.0);
+  for (const d of dots) {
+    const s = toScreen(d);
+    let a = d.base + (reduceMotion ? 0 : Math.sin(t * 0.7 + d.phase) * 0.06);
+    const dy = Math.abs(s.y - beamY);
+    if (dy < 55 * scale) a += (1 - dy / (55 * scale)) * 0.3;
+    const dx = Math.abs(s.x - shimmerX);
+    if (dx < 100 * scale) a += (1 - dx / (100 * scale)) * 0.25;
+    ctx.fillStyle = `rgba(222,222,217,${Math.min(a, 0.95)})`;
+    ctx.fillRect(s.x - r / 2, s.y - r / 2, r, r);
+  }
+
+  /* --- 滑动光束: faint baseline + moving scan head, inspired by beam/light-ray UI materials --- */
+  ctx.strokeStyle = 'rgba(255,255,255,0.13)';
+  ctx.lineWidth = 1;
+  ctx.shadowBlur = 0;
+  ctx.beginPath();
+  ctx.moveTo(0, beamY);
+  ctx.lineTo(rect.width, beamY);
+  ctx.stroke();
+
+  const scanProgress = reduceMotion ? 0.72 : (t * 0.26) % 1.25;
+  const scanX = (scanProgress - 0.12) * rect.width;
+  const scanGrad = ctx.createLinearGradient(scanX - 220, 0, scanX + 260, 0);
+  scanGrad.addColorStop(0, 'rgba(255,255,255,0)');
+  scanGrad.addColorStop(0.28, 'rgba(255,255,255,0.13)');
+  scanGrad.addColorStop(0.56, 'rgba(255,255,255,0.88)');
+  scanGrad.addColorStop(0.72, 'rgba(255,255,255,0.38)');
+  scanGrad.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.strokeStyle = scanGrad;
+  ctx.lineWidth = 1.8;
+  ctx.shadowColor = 'rgba(255,255,255,0.8)';
+  ctx.shadowBlur = CONFIG.beamGlow;
+  ctx.beginPath();
+  ctx.moveTo(Math.max(0, scanX - 260), beamY);
+  ctx.lineTo(Math.min(rect.width, scanX + 280), beamY);
+  ctx.stroke();
+
+  const pulse = reduceMotion ? 0 : Math.sin(t * 4.4) * 0.7;
+  ctx.fillStyle = '#fff';
+  ctx.shadowBlur = 24;
+  ctx.beginPath();
+  if (scanX > -20 && scanX < rect.width + 20) {
+    ctx.arc(scanX, beamY, 4.5 + pulse, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+
+  /* --- 虚线 traces --- */
+  ctx.strokeStyle = 'rgba(185,185,180,0.45)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 5]);
+  ctx.lineDashOffset = reduceMotion ? 0 : -t * 7;
+  for (const tr of TRACES) {
+    const pts = resolveTrace(tr).map(toScreen);
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  /* --- 卡片连接线 (EU/SG 卡片在锚点下方, 补垂直虚线) --- */
+  ctx.strokeStyle = 'rgba(150,150,146,0.4)';
+  ctx.setLineDash([2, 4]);
+  for (const key of Object.keys(CONFIG.cardOffsets)) {
+    const o = CONFIG.cardOffsets[key];
+    if (!o.connector) continue;
+    const s = toScreen(ANCHORS[key]);
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y + 8);
+    ctx.lineTo(s.x, s.y + o.dy - 4);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  /* --- 锚点方块 --- */
+  for (const key of Object.keys(ANCHORS)) {
+    const s = toScreen(ANCHORS[key]);
+    const size = 12 + (reduceMotion ? 0 : Math.sin(t * 2 + s.x) * 1.1);
+    ctx.fillStyle = 'rgba(5,5,5,0.92)';
+    ctx.strokeStyle = 'rgba(242,242,238,0.92)';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(s.x - size / 2, s.y - size / 2, size, size);
+    ctx.strokeRect(s.x - size / 2, s.y - size / 2, size, size);
+  }
+
+  if (!reduceMotion) requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', () => { resize(); if (reduceMotion) draw(performance.now()); });
+resize();
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

@@ -153,9 +153,7 @@ The trap set is not just a demo trick. It is a mechanism-design primitive. It cr
 
 The MVP demonstrates three miner quality tiers:
 
-![Figure 2: Validator audit screenshot](../submission_assets/screenshots/03_audit_miner_b.png)
-
-**Figure 2. Validator audit screenshot.** Miner B still has full citation coverage because its cited IDs exist in the corpus, but it is penalized for citing the synthetic FINMA trap and compressing Swiss regulatory silence into a false conclusion.
+**Validator audit example.** Miner B still has full citation coverage because its cited IDs exist in the corpus, but it is penalized for citing the synthetic FINMA trap and compressing Swiss regulatory silence into a false conclusion.
 
 | Miner | Behavior | Citation Coverage | Trap Resistance | Claim-Evidence Closure | Composite |
 | --- | --- | ---: | ---: | ---: | ---: |

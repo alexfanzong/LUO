@@ -1,0 +1,60 @@
+{
+  "entryType": "luo.bittensor.miner_entry.v1",
+  "status": "testnet_subnet_runtime_packaged",
+  "purpose": "Public miner-facing entry contract for LUO legal uncertainty map submissions.",
+  "network": {
+    "chain": "bittensor",
+    "network": "test",
+    "netuid": "assigned at wallet/netuid registration",
+    "minerIdentity": "hotkey",
+    "validatorIdentity": "validator hotkey"
+  },
+  "challengePayload": {
+    "challenge_id": "LUO-OUSG-XJ-V1",
+    "question": "Map OUSG eligibility and transfer boundaries across the United States, Hong Kong, Singapore, and the European Union. Preserve divergence; do not convert silence, conditional frameworks, or classification gaps into permission.",
+    "required_jurisdictions": ["US", "HK", "SG", "EU"],
+    "corpus_manifest": {
+      "manifest_id": "validator-private-ousg-manifest",
+      "schema_uri": "/map_packet.schema.json",
+      "as_of_date": "2026-06-07",
+      "corpus_hash_commitment": "<validator_private_hash_commitment>",
+      "public_note": "The manifest names the bounded source universe. Full corpus text, synthetic traps, answer keys, and validator evidence stay private."
+    }
+  },
+  "minerSubmissionRequires": [
+    "challenge_id",
+    "query",
+    "required_jurisdictions",
+    "citations",
+    "map_claims",
+    "divergence_pairs",
+    "unresolved_gaps"
+  ],
+  "publicArtifacts": {
+    "minerEntryContract": "/miner_entry.json",
+    "subnetStatus": "/subnet_status.json",
+    "submissionSchema": "/map_packet.schema.json",
+    "sampleSubmission": "/sample_map_packet.json"
+  },
+  "localVerificationCommands": [
+    "python3 -m neurons.miner --tier high",
+    "python3 -m neurons.validator --out output/ousg_local_epoch.json",
+    "python3 -m unittest discover -s tests -p 'test_*.py'"
+  ],
+  "scoring": {
+    "version": "v1.1",
+    "weights": {
+      "citation_validity": 0.5,
+      "divergence_fidelity": 0.3,
+      "reasoning_coherence": 0.15,
+      "coverage_breadth": 0.05
+    },
+    "hardGate": "Fake, missing, trap, or mismatched sources cap diagnostic score and receive zero emission weight."
+  },
+  "privateValidatorAssets": [
+    "synthetic trap file",
+    "answer key",
+    "hard-gate evidence"
+  ],
+  "privateAssetPolicy": "Validator-private trap and answer-key assets are never sent to miners in the challenge payload."
+}
