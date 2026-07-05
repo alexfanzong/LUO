@@ -48,17 +48,20 @@ The public challenge shape includes:
   "required_jurisdictions": ["US", "HK", "SG", "EU"],
   "corpus_manifest": {
     "manifest_id": "luo-ousg-demo-manifest",
-    "schema_uri": "/map_packet.schema.json",
+    "schema_uri": "/miner_submission.schema.json",
     "as_of_date": "2026-06-07",
     "corpus_hash_commitment": "<corpus_hash_commitment>"
   }
 }
 ```
 
-Miner responses must be schema-bound Map Packet submissions. The public schema and a small sample packet live at:
+Two distinct schema-bound objects flow through the runtime — do not confuse them:
 
-- [public/map_packet.schema.json](public/map_packet.schema.json)
-- [public/sample_map_packet.json](public/sample_map_packet.json)
+- **Miner submission** (`luo.miner_submission.v1`): what a miner sends in response to a challenge.
+  - [public/miner_submission.schema.json](public/miner_submission.schema.json)
+  - [public/sample_miner_submission.json](public/sample_miner_submission.json)
+- **Map Packet** (`1.0`): the validator-accepted round artifact that downstream systems consume and hash-anchor.
+  - [public/map_packet.schema.json](public/map_packet.schema.json)
 - [public/miner_entry.json](public/miner_entry.json)
 - [public/subnet_status.json](public/subnet_status.json)
 
@@ -141,7 +144,8 @@ The Vite build uses relative asset paths so the generated static bundle can be s
 │   ├── miner_entry.json
 │   ├── subnet_status.json
 │   ├── map_packet.schema.json
-│   └── sample_map_packet.json
+│   ├── miner_submission.schema.json
+│   └── sample_miner_submission.json
 ├── src/
 │   ├── components/
 │   ├── data/

@@ -1,9 +1,14 @@
 {
-  "schemaVersion": "luo.map_packet.v1",
+  "schemaVersion": "luo.miner_submission.v1",
   "challengeId": "LUO-OUSG-XJ-V1",
   "minerHotkey": "5PUBLIC_DEMO_HOTKEY_PLACEHOLDER",
   "question": "Map OUSG eligibility and transfer boundaries across the United States, Hong Kong, Singapore, and the European Union. Preserve divergence; do not convert silence, conditional frameworks, or classification gaps into permission.",
-  "requiredJurisdictions": ["US", "HK", "SG", "EU"],
+  "requiredJurisdictions": [
+    "US",
+    "HK",
+    "SG",
+    "EU"
+  ],
   "corpusManifest": {
     "manifestId": "public-demo-ousg-manifest",
     "asOfDate": "2026-06-07",
@@ -14,27 +19,37 @@
     {
       "sourceId": "ONDO-SRC-01",
       "jurisdiction": "PRODUCT",
-      "claimIds": ["CLAIM-US-01"]
+      "claimIds": [
+        "CLAIM-US-01"
+      ]
     },
     {
       "sourceId": "US-SRC-01",
       "jurisdiction": "US",
-      "claimIds": ["CLAIM-US-01"]
+      "claimIds": [
+        "CLAIM-US-01"
+      ]
     },
     {
       "sourceId": "HK-SRC-01",
       "jurisdiction": "HK",
-      "claimIds": ["CLAIM-HK-01"]
+      "claimIds": [
+        "CLAIM-HK-01"
+      ]
     },
     {
       "sourceId": "SG-SRC-01",
       "jurisdiction": "SG",
-      "claimIds": ["CLAIM-SG-01"]
+      "claimIds": [
+        "CLAIM-SG-01"
+      ]
     },
     {
       "sourceId": "EU-SRC-01",
       "jurisdiction": "EU",
-      "claimIds": ["CLAIM-EU-01"]
+      "claimIds": [
+        "CLAIM-EU-01"
+      ]
     }
   ],
   "mapClaims": [
@@ -42,7 +57,10 @@
       "claimId": "CLAIM-US-01",
       "jurisdiction": "US",
       "claim": "OUSG remains bounded by qualified-access and private-offering constraints.",
-      "sourceIds": ["ONDO-SRC-01", "US-SRC-01"],
+      "sourceIds": [
+        "ONDO-SRC-01",
+        "US-SRC-01"
+      ],
       "confidence": "high",
       "notSupported": "This claim does not establish public retail eligibility."
     },
@@ -50,7 +68,10 @@
       "claimId": "CLAIM-HK-01",
       "jurisdiction": "HK",
       "claim": "Hong Kong tokenised-product materials preserve conditionality; they do not prove OUSG retail offerability.",
-      "sourceIds": ["HK-SRC-01", "ONDO-SRC-01"],
+      "sourceIds": [
+        "HK-SRC-01",
+        "ONDO-SRC-01"
+      ],
       "confidence": "medium",
       "notSupported": "This claim does not establish that OUSG is SFC-authorised or retail-distributable."
     },
@@ -58,7 +79,9 @@
       "claimId": "CLAIM-SG-01",
       "jurisdiction": "SG",
       "claim": "Singapore source context is narrow and should not be expanded into direct OUSG approval.",
-      "sourceIds": ["SG-SRC-01"],
+      "sourceIds": [
+        "SG-SRC-01"
+      ],
       "confidence": "medium",
       "notSupported": "This claim does not establish a general offering route."
     },
@@ -66,7 +89,9 @@
       "claimId": "CLAIM-EU-01",
       "jurisdiction": "EU",
       "claim": "EU treatment preserves the MiCA and financial-instrument classification boundary.",
-      "sourceIds": ["EU-SRC-01"],
+      "sourceIds": [
+        "EU-SRC-01"
+      ],
       "confidence": "medium",
       "notSupported": "This claim does not resolve product-specific classification."
     }
@@ -75,9 +100,16 @@
     {
       "pairId": "PAIR-QUALIFIED-ACCESS-01",
       "factInQuestion": "Can a tokenised treasury product be treated as broadly retail-transferable across jurisdictions?",
-      "jurisdictions": ["US", "HK"],
+      "jurisdictions": [
+        "US",
+        "HK"
+      ],
       "divergenceType": "more_restrictive",
-      "sourceIds": ["ONDO-SRC-01", "US-SRC-01", "HK-SRC-01"]
+      "sourceIds": [
+        "ONDO-SRC-01",
+        "US-SRC-01",
+        "HK-SRC-01"
+      ]
     }
   ],
   "unresolvedGaps": [

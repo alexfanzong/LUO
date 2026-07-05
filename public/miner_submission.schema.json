@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alexfanzong.github.io/LUO/map_packet.schema.json",
+  "title": "LUO Miner Submission v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "challengeId",
+    "minerHotkey",
+    "question",
+    "requiredJurisdictions",
+    "citations",
+    "mapClaims",
+    "divergencePairs",
+    "unresolvedGaps"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "luo.miner_submission.v1"
+    },
+    "challengeId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "minerHotkey": {
+      "type": "string",
+      "description": "Bittensor miner hotkey identifier."
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requiredJurisdictions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "corpusManifest": {
+      "type": "object",
+      "required": [
+        "manifestId",
+        "asOfDate",
+        "sourceCount"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "manifestId": {
+          "type": "string"
+        },
+        "asOfDate": {
+          "type": "string"
+        },
+        "sourceCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "publicNote": {
+          "type": "string"
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "sourceId",
+          "jurisdiction",
+          "claimIds"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": {
+            "type": "string"
+          },
+          "jurisdiction": {
+            "type": "string"
+          },
+          "claimIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "mapClaims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "claimId",
+          "jurisdiction",
+          "claim",
+          "sourceIds",
+          "confidence"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "claimId": {
+            "type": "string"
+          },
+          "jurisdiction": {
+            "type": "string"
+          },
+          "claim": {
+            "type": "string"
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "notSupported": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "divergencePairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "pairId",
+          "factInQuestion",
+          "jurisdictions",
+          "divergenceType",
+          "sourceIds"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "pairId": {
+            "type": "string"
+          },
+          "factInQuestion": {
+            "type": "string"
+          },
+          "jurisdictions": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "divergenceType": {
+            "type": "string"
+          },
+          "sourceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "unresolvedGaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "gapId",
+          "jurisdiction",
+          "description",
+          "requiredNextStep"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "gapId": {
+            "type": "string"
+          },
+          "jurisdiction": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "requiredNextStep": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

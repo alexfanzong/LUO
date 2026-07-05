@@ -30,8 +30,8 @@ const subnetEntrySteps = [
 
 const minerEntryArtifacts = [
   ['Synapse payload', '/miner_entry.json', 'challenge_id · question · jurisdictions · corpus_manifest'],
-  ['Submission schema', '/map_packet.schema.json', 'map_claims · divergence_pairs · unresolved_gaps · citations'],
-  ['Sample packet', '/sample_map_packet.json', 'example OUSG Map Packet submission'],
+  ['Submission schema', '/miner_submission.schema.json', 'map_claims · divergence_pairs · unresolved_gaps · citations'],
+  ['Sample submission', '/sample_miner_submission.json', 'example OUSG miner submission'],
   ['Subnet status', '/subnet_status.json', 'winner UID · gated policy · normalized weight output']
 ];
 

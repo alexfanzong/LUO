@@ -7,7 +7,7 @@
     "challenge_id": "LUO-OUSG-XJ-V1",
     "required_jurisdictions": ["US", "HK", "SG", "EU"],
     "corpus_manifest": "luo-ousg-demo-manifest",
-    "submission_schema": "/map_packet.schema.json"
+    "submission_schema": "/miner_submission.schema.json"
   },
   "validatorEpoch": {
     "winner_uid": 3,

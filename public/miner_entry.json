@@ -15,7 +15,7 @@
     "required_jurisdictions": ["US", "HK", "SG", "EU"],
     "corpus_manifest": {
       "manifest_id": "luo-ousg-demo-manifest",
-      "schema_uri": "/map_packet.schema.json",
+      "schema_uri": "/miner_submission.schema.json",
       "as_of_date": "2026-06-07",
       "corpus_hash_commitment": "<corpus_hash_commitment>"
     }
@@ -32,8 +32,8 @@
   "publicArtifacts": {
     "minerEntryContract": "/miner_entry.json",
     "subnetStatus": "/subnet_status.json",
-    "submissionSchema": "/map_packet.schema.json",
-    "sampleSubmission": "/sample_map_packet.json"
+    "submissionSchema": "/miner_submission.schema.json",
+    "sampleSubmission": "/sample_miner_submission.json"
   },
   "scoring": {
     "version": "v1.1",

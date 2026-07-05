@@ -1,136 +1,238 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://alexfanzong.github.io/LUO/map_packet.schema.json",
-  "title": "LUO Map Packet Submission",
+  "$id": "https://luo.subnet/schemas/map_packet.schema.json",
+  "title": "LUO Map Packet v1",
+  "description": "The commodity a LUO validator round emits: an accepted, validator-scored, source-bounded legal uncertainty map for one product/question. Downstream agents consume packets, not free-form legal answers. A packet is not a legal opinion.",
   "type": "object",
   "required": [
     "schemaVersion",
-    "challengeId",
-    "minerHotkey",
+    "packetId",
+    "productRef",
     "question",
-    "requiredJurisdictions",
-    "citations",
-    "mapClaims",
-    "divergencePairs",
-    "unresolvedGaps"
+    "acceptedSubmission",
+    "validator",
+    "sourceAnchors",
+    "validatorCanaries",
+    "map",
+    "downstreamUse"
   ],
   "additionalProperties": false,
   "properties": {
     "schemaVersion": {
-      "const": "luo.map_packet.v1"
-    },
-    "challengeId": {
       "type": "string",
-      "minLength": 1
+      "const": "1.0",
+      "description": "Map Packet schema version."
     },
-    "minerHotkey": {
+    "packetId": {
       "type": "string",
-      "description": "Bittensor miner hotkey identifier."
+      "pattern": "^LUO-[A-Z0-9]+-[A-Z]{2}-[0-9]{6}-[0-9]{4}$",
+      "description": "Stable packet id, e.g. LUO-OUSG-XJ-202607-0001."
+    },
+    "productRef": {
+      "type": "object",
+      "required": ["productId", "name", "axis"],
+      "additionalProperties": false,
+      "properties": {
+        "productId": { "type": "string", "description": "e.g. ondo-ousg" },
+        "name": { "type": "string", "description": "e.g. Ondo OUSG" },
+        "axis": { "type": "string", "description": "The single axis this packet maps, e.g. Investor Eligibility + Transfer Restrictions." },
+        "asOfDate": { "type": "string", "format": "date", "description": "Text-verification date of the underlying corpus." }
+      }
     },
     "question": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "description": "The validator challenge question this packet answers."
     },
-    "requiredJurisdictions": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "string"
-      },
-      "uniqueItems": true
-    },
-    "corpusManifest": {
+    "acceptedSubmission": {
       "type": "object",
-      "required": ["manifestId", "asOfDate", "sourceCount"],
+      "required": ["minerId", "challengeId", "sRaw", "sFinal"],
       "additionalProperties": false,
       "properties": {
-        "manifestId": { "type": "string" },
-        "asOfDate": { "type": "string" },
-        "sourceCount": { "type": "integer", "minimum": 0 },
-        "publicNote": { "type": "string" }
+        "minerId": { "type": "string" },
+        "challengeId": { "type": "string", "description": "Answer-key challenge id, e.g. LUO-OUSG-XJ-V1." },
+        "minerHotkey": { "type": "string", "description": "Bittensor hotkey ss58 of the winning miner (optional in offline demo)." },
+        "sRaw": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sFinal": { "type": "number", "minimum": 0, "maximum": 1 },
+        "submittedAt": { "type": "string", "format": "date-time" }
       }
     },
-    "citations": {
+    "validator": {
+      "type": "object",
+      "required": ["scoringVersion", "weights", "dimensionScores", "hardGate"],
+      "additionalProperties": false,
+      "properties": {
+        "validatorHotkey": { "type": "string", "description": "Bittensor hotkey ss58 of the scoring validator (optional in offline demo)." },
+        "scoringVersion": { "type": "string", "description": "e.g. v1.1" },
+        "weights": {
+          "type": "object",
+          "required": ["citation_validity", "divergence_fidelity", "reasoning_coherence", "coverage_breadth"],
+          "additionalProperties": false,
+          "properties": {
+            "citation_validity": { "type": "number" },
+            "divergence_fidelity": { "type": "number" },
+            "reasoning_coherence": { "type": "number" },
+            "coverage_breadth": { "type": "number" }
+          }
+        },
+        "dimensionScores": {
+          "type": "object",
+          "required": ["citation_validity", "divergence_fidelity", "reasoning_coherence", "coverage_breadth"],
+          "additionalProperties": false,
+          "properties": {
+            "citation_validity": { "type": "number", "minimum": 0, "maximum": 1 },
+            "divergence_fidelity": { "type": "number", "minimum": 0, "maximum": 1 },
+            "reasoning_coherence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "coverage_breadth": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "hardGate": {
+          "type": "object",
+          "required": ["triggered", "reasons"],
+          "additionalProperties": false,
+          "properties": {
+            "triggered": { "type": "boolean" },
+            "cap": { "type": ["number", "null"] },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["missing_or_non_real_source", "synthetic_trap_citation", "holding_mismatch"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "sourceAnchors": {
       "type": "array",
       "minItems": 1,
+      "description": "The real corpus sources the accepted map is bounded by.",
       "items": {
         "type": "object",
-        "required": ["sourceId", "jurisdiction", "claimIds"],
+        "required": ["sourceId", "jurisdiction", "title", "sourceUrl"],
         "additionalProperties": false,
         "properties": {
-          "sourceId": { "type": "string" },
+          "sourceId": { "type": "string", "description": "Corpus id, e.g. HK-SRC-01." },
           "jurisdiction": { "type": "string" },
-          "claimIds": {
-            "type": "array",
-            "items": { "type": "string" },
-            "uniqueItems": true
+          "title": { "type": "string" },
+          "sourceUrl": { "type": "string", "format": "uri" },
+          "sourceTier": { "type": "string" },
+          "citationStatus": { "type": "string" },
+          "asOfDate": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    "validatorCanaries": {
+      "type": "object",
+      "required": ["trapIds", "trapHits", "gateTriggered"],
+      "additionalProperties": false,
+      "description": "Synthetic-trap canary record for this round. Traps gate; they are not a weighted dimension.",
+      "properties": {
+        "trapIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Trap ids planted in this challenge, e.g. OUSG-SYN-01."
+        },
+        "trapHits": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Trap ids cited by the accepted submission. Must be empty for an accepted packet."
+        },
+        "gateTriggered": { "type": "boolean", "description": "Must be false for an accepted packet." }
+      }
+    },
+    "map": {
+      "type": "object",
+      "required": ["signals", "unresolvedGaps"],
+      "additionalProperties": false,
+      "properties": {
+        "signals": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Per-jurisdiction claim boundaries. These are scoped evidence signals, not jurisdiction-wide legal conclusions.",
+          "items": {
+            "type": "object",
+            "required": ["jurisdiction", "riskState", "claimBoundary", "sourceIds"],
+            "additionalProperties": false,
+            "properties": {
+              "jurisdiction": { "type": "string", "description": "e.g. US, HK, SG, EU, PRODUCT." },
+              "riskState": {
+                "type": "string",
+                "enum": ["settled", "restricted", "conditional", "silent", "contested"],
+                "description": "Risk-state vocabulary from the LUO sample spec."
+              },
+              "claimBoundary": { "type": "string", "description": "What the cited sources support — and implicitly nothing more." },
+              "notSupported": { "type": "string", "description": "What this signal must NOT be read to establish." },
+              "sourceIds": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+              "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+            }
+          }
+        },
+        "divergencePairs": {
+          "type": "array",
+          "description": "Source-backed contradictions between two jurisdiction-specific claims on the same fact.",
+          "items": {
+            "type": "object",
+            "required": ["pairId", "factInQuestion", "sideA", "sideB", "contradictionType"],
+            "additionalProperties": false,
+            "properties": {
+              "pairId": { "type": "string" },
+              "factInQuestion": { "type": "string" },
+              "sideA": { "$ref": "#/$defs/divergenceSide" },
+              "sideB": { "$ref": "#/$defs/divergenceSide" },
+              "contradictionType": { "type": "string", "enum": ["opposite", "more_restrictive", "silent_vs_explicit"] },
+              "scopeBoundary": { "type": "string" }
+            }
+          }
+        },
+        "unresolvedGaps": {
+          "type": "array",
+          "description": "Open questions the packet deliberately does not answer. Downstream consumers must not fill these.",
+          "items": {
+            "type": "object",
+            "required": ["gapId", "jurisdiction", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "gapId": { "type": "string" },
+              "jurisdiction": { "type": "string" },
+              "description": { "type": "string" },
+              "requiredNextStep": { "type": "string", "description": "e.g. counsel review, source refresh." }
+            }
           }
         }
       }
     },
-    "mapClaims": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["claimId", "jurisdiction", "claim", "sourceIds", "confidence"],
-        "additionalProperties": false,
-        "properties": {
-          "claimId": { "type": "string" },
-          "jurisdiction": { "type": "string" },
-          "claim": { "type": "string" },
-          "sourceIds": {
-            "type": "array",
-            "items": { "type": "string" },
-            "uniqueItems": true
-          },
-          "confidence": {
-            "enum": ["low", "medium", "high"]
-          },
-          "notSupported": {
-            "type": "string"
-          }
+    "downstreamUse": {
+      "type": "object",
+      "required": ["allowedTasks", "forbiddenInferences"],
+      "additionalProperties": false,
+      "properties": {
+        "allowedTasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "What a consumer agent may do with this packet, e.g. market-entry sequencing, counsel-briefing prep, risk flagging."
+        },
+        "forbiddenInferences": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Inferences the packet explicitly forbids, e.g. treating silence as permission, treating a conditional framework as an available route."
         }
       }
-    },
-    "divergencePairs": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["pairId", "factInQuestion", "jurisdictions", "divergenceType", "sourceIds"],
-        "additionalProperties": false,
-        "properties": {
-          "pairId": { "type": "string" },
-          "factInQuestion": { "type": "string" },
-          "jurisdictions": {
-            "type": "array",
-            "minItems": 2,
-            "items": { "type": "string" },
-            "uniqueItems": true
-          },
-          "divergenceType": {
-            "type": "string"
-          },
-          "sourceIds": {
-            "type": "array",
-            "items": { "type": "string" },
-            "uniqueItems": true
-          }
-        }
-      }
-    },
-    "unresolvedGaps": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["gapId", "jurisdiction", "description", "requiredNextStep"],
-        "additionalProperties": false,
-        "properties": {
-          "gapId": { "type": "string" },
-          "jurisdiction": { "type": "string" },
-          "description": { "type": "string" },
-          "requiredNextStep": { "type": "string" }
-        }
+    }
+  },
+  "$defs": {
+    "divergenceSide": {
+      "type": "object",
+      "required": ["jurisdiction", "position", "sourceIds"],
+      "additionalProperties": false,
+      "properties": {
+        "jurisdiction": { "type": "string" },
+        "claimId": { "type": "string" },
+        "position": { "type": "string" },
+        "sourceIds": { "type": "array", "items": { "type": "string" } }
       }
     }
   }
