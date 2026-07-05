@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://alexfanzong.github.io/LUO/map_packet.schema.json",
+  "$id": "https://alexfanzong.github.io/LUO/miner_submission.schema.json",
   "title": "LUO Miner Submission v1",
   "type": "object",
   "required": [

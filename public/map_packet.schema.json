@@ -12,7 +12,7 @@
     "acceptedSubmission",
     "validator",
     "sourceAnchors",
-    "validatorCanaries",
+    "validatorChecks",
     "map",
     "downstreamUse"
   ],
@@ -50,7 +50,7 @@
       "additionalProperties": false,
       "properties": {
         "minerId": { "type": "string" },
-        "challengeId": { "type": "string", "description": "Answer-key challenge id, e.g. LUO-OUSG-XJ-V1." },
+        "challengeId": { "type": "string", "description": "Validator challenge id, e.g. LUO-OUSG-XJ-V1." },
         "minerHotkey": { "type": "string", "description": "Bittensor hotkey ss58 of the winning miner (optional in offline demo)." },
         "sRaw": { "type": "number", "minimum": 0, "maximum": 1 },
         "sFinal": { "type": "number", "minimum": 0, "maximum": 1 },
@@ -97,7 +97,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": ["missing_or_non_real_source", "synthetic_trap_citation", "holding_mismatch"]
+                "enum": ["missing_or_invalid_source", "invalid_source_citation", "holding_mismatch"]
               }
             }
           }
@@ -107,7 +107,7 @@
     "sourceAnchors": {
       "type": "array",
       "minItems": 1,
-      "description": "The real corpus sources the accepted map is bounded by.",
+      "description": "The reviewed sources the accepted map is bounded by.",
       "items": {
         "type": "object",
         "required": ["sourceId", "jurisdiction", "title", "sourceUrl"],
@@ -123,21 +123,21 @@
         }
       }
     },
-    "validatorCanaries": {
+    "validatorChecks": {
       "type": "object",
-      "required": ["trapIds", "trapHits", "gateTriggered"],
+      "required": ["invalidSourceIds", "invalidSourceHits", "gateTriggered"],
       "additionalProperties": false,
-      "description": "Synthetic-trap canary record for this round. Traps gate; they are not a weighted dimension.",
+      "description": "Invalid-source check record for this round. Invalid-source hits gate; they are not a weighted dimension.",
       "properties": {
-        "trapIds": {
+        "invalidSourceIds": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "Trap ids planted in this challenge, e.g. OUSG-SYN-01."
+          "description": "Invalid-source ids included in this challenge, e.g. OUSG-SYN-01."
         },
-        "trapHits": {
+        "invalidSourceHits": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "Trap ids cited by the accepted submission. Must be empty for an accepted packet."
+          "description": "Invalid-source ids cited by the accepted submission. Must be empty for an accepted packet."
         },
         "gateTriggered": { "type": "boolean", "description": "Must be false for an accepted packet." }
       }
