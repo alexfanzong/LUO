@@ -13,10 +13,10 @@
 | --- | --- |
 | Subnet commodity | Cross-jurisdictional legal risk topology maps |
 | Miner task | Produce structured claim-level audits from legal evidence |
-| Validator task | Check citation coverage, invalid-source resistance, and claim-evidence closure |
+| Validator task | Check citation coverage, source-boundary discipline, and claim-evidence closure |
 | Ground truth | Evidence boundary, not final legal truth |
 | Demo benchmark | Tornado Cash across the United States, Netherlands, Switzerland, and Hong Kong |
-| Anti-gaming | Rotating source checks, rotating corpus, held-out claims, staked challenges |
+| Anti-gaming | Rotating challenge sets, rotating source manifests, live validation checks, staked challenges |
 | Market | Pre-opinion legal risk intelligence for RWA, stablecoins, custody, cross-border payments, and DeFi |
 
 ---
@@ -60,7 +60,7 @@ Given a cross-jurisdiction legal question, a miner must produce a cited legal un
 2. separate jurisdictions and institutional signals,
 3. preserve disagreement instead of collapsing it into one conclusion,
 4. cite source IDs for every material claim,
-5. avoid invalid-source citations and fabricated authority.
+5. avoid unsupported citations and fabricated authority.
 
 The output is not a legal opinion. It is a structured map of legal divergence before a user pays for jurisdiction-specific counsel.
 
@@ -71,7 +71,7 @@ Miners are rewarded for producing answers that are:
 - **Evidence-grounded:** every material claim is anchored to a source ID in the legal corpus.
 - **Jurisdiction-aware:** the answer separates U.S., Dutch, Swiss, Hong Kong, and cross-jurisdiction evidence instead of blending them.
 - **Uncertainty-preserving:** the answer does not fabricate consensus where the corpus shows disagreement.
-- **Invalid-source resistant:** the answer avoids plausible-looking but fabricated authorities inserted into the benchmark.
+- **Source-boundary disciplined:** the answer avoids unsupported authorities and does not turn uncertainty into false certainty.
 
 The best miner is not the one that gives the most confident answer. The best miner is the one that most faithfully represents the current legal topology.
 
@@ -82,8 +82,8 @@ Validators score miner outputs across three independent dimensions:
 1. **Citation Coverage**
    Does the miner cite source IDs that exist inside the corpus? This catches invented IDs and unsupported references.
 
-2. **Invalid-Source Resistance**
-   Does the miner avoid citing fake or mismatched authorities? A miner that cites an invalid source has converted uncertainty into false authority.
+2. **Source-Boundary Discipline**
+   Does the miner keep claims inside the available evidence boundary instead of converting uncertainty into false authority?
 
 3. **Claim-Evidence Closure**
    Does the legal claim actually follow from the cited evidence? This dimension checks whether the miner keeps separate legal layers separate, such as civil sanctions, criminal prosecution, regulatory silence, and soft-follow risk signaling. Claim-evidence closure measures evidence-bound support, rather than whether the prose sounds persuasive.
@@ -93,21 +93,21 @@ The MVP uses a reproducible demo scoring formula:
 ```text
 Composite Score =
 0.10 * Citation Coverage
-+ 0.60 * Invalid-Source Resistance
++ 0.60 * Source-Boundary Discipline
 + 0.30 * Claim-Evidence Closure
 ```
 
-The weights are intentionally demo-oriented. Citation coverage is a minimum threshold. Invalid-source resistance carries the highest weight because the MVP is designed to test the core failure mode: fabricated certainty. Claim-evidence closure captures whether the miner preserves legal divergence rather than compressing it.
+The weights are intentionally demo-oriented. Citation coverage is a minimum threshold. Source-boundary discipline carries the highest weight because the MVP is designed to test the core failure mode: fabricated certainty. Claim-evidence closure captures whether the miner preserves legal divergence rather than compressing it.
 
 ### Reward Logic
 
-LUO does not use a pure winner-takes-all reward model in the MVP. Outputs that hit invalid-source checks fall below the reward threshold or receive severe penalties for that round. Among outputs that pass the threshold, rewards are allocated continuously according to the composite score. This matters because LUO's commodity is a legal risk topology map, not a single final answer. A pure winner-takes-all design would over-compress useful disagreement and push miners toward one dominant narrative, which is exactly what LUO is designed to avoid.
+LUO does not use a pure winner-takes-all reward model in the MVP. Outputs that violate the source boundary fall below the reward threshold or receive severe penalties for that round. Among outputs that pass the threshold, rewards are allocated continuously according to the composite score. This matters because LUO's commodity is a legal risk topology map, not a single final answer. A pure winner-takes-all design would over-compress useful disagreement and push miners toward one dominant narrative, which is exactly what LUO is designed to avoid.
 
 In production, these weights can be adjusted by task type, validator challenge outcomes, and expert-reviewed benchmark performance.
 
-### Anti-Gaming Design
+### Rotating Validation Design
 
-LUO assumes miners will try to game the benchmark. The anti-gaming layer combines rotating source sets, held-out claims, invalid-source checks, claim-level scoring, and a future staked challenge mechanism. Public examples teach the audit format while preserving the value of live evaluation.
+LUO assumes miners will optimize against public rules. The validation layer should therefore rotate challenge sets, source manifests, jurisdiction combinations, and live checks. Public examples teach the packet format and scoring philosophy while preserving the value of live evaluation.
 
 ### Staked Challenge Layer
 
@@ -136,25 +136,25 @@ The public demo includes a static HTML experience with five sections:
 The MVP evaluation setup contains:
 
 - **46 real source entries**
-- **5 invalid-source check entries**
+- **live source-boundary checks**
 - **4 target jurisdictions:** United States, Netherlands, Switzerland, Hong Kong
 - **1 cross-jurisdiction comparison layer**
 
-The invalid-source checks test whether miners can distinguish grounded uncertainty from fabricated authority.
+The source-boundary checks test whether miners can distinguish grounded uncertainty from fabricated authority.
 
 ### Example Validator Results
 
 The MVP demonstrates three miner quality tiers:
 
-**Validator audit example.** Miner B still has full citation coverage because its cited IDs exist in the corpus, but it is penalized for citing an invalid authority and compressing Swiss regulatory silence into a false conclusion.
+**Validator audit example.** Miner B still has full citation coverage because its cited IDs exist in the corpus, but it is penalized for crossing the evidence boundary and compressing Swiss regulatory silence into a false conclusion.
 
-| Miner | Behavior | Citation Coverage | Invalid-Source Resistance | Claim-Evidence Closure | Composite |
+| Miner | Behavior | Citation Coverage | Source-Boundary Discipline | Claim-Evidence Closure | Composite |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Miner A | faithfully preserves divergence | 1.0000 | 1.0000 | 0.9500 | 0.985 |
-| Miner B | compresses divergence and cites one invalid-source check | 1.0000 | 0.5000 | 0.6500 | 0.595 |
-| Miner C | fabricates consensus and cites three invalid-source checks | 1.0000 | 0.1250 | 0.3000 | 0.265 |
+| Miner B | compresses divergence and crosses the source boundary | 1.0000 | 0.5000 | 0.6500 | 0.595 |
+| Miner C | fabricates consensus and repeatedly crosses the source boundary | 1.0000 | 0.1250 | 0.3000 | 0.265 |
 
-The important point is that Miner B and Miner C may cite IDs that exist inside the system, so their citation coverage can still be 1.0000. They are penalized because they cite invalid-source authorities and distort the legal structure. This separation is central to LUO's mechanism.
+The important point is that Miner B and Miner C may cite IDs that exist inside the system, so their citation coverage can still be 1.0000. They are penalized because the claim is not supported by the source boundary and the legal structure is distorted. This separation is central to LUO's mechanism.
 
 ---
 
@@ -204,7 +204,7 @@ LUO uses Yuma Consensus not as a generic scoring tool for model outputs, but as 
 
 ## How Yuma Applies in LUO
 
-In LUO, Yuma Consensus is not used to vote on legal truth. It is used to coordinate evidence-bound review. A miner submits a legal risk topology map. Multiple validators independently audit the same output: whether the citations exist, whether the miner hit invalid-source checks, and whether each claim stays within the evidence boundary. Yuma aggregates those validator judgments into incentive weights. Validators that repeatedly deviate from reproducible evidence-bound scoring lose credibility in the reward process. Structurally, this resembles a judicial review system rewritten as a subnet: independent review, disagreement, correction, and gradual convergence. The point is not to make law objective. The point is to make fabricated certainty economically visible.
+In LUO, Yuma Consensus is not used to vote on legal truth. It is used to coordinate evidence-bound review. A miner submits a legal risk topology map. Multiple validators independently audit the same output: whether the citations exist and whether each claim stays within the evidence boundary. Yuma aggregates those validator judgments into incentive weights. Validators that repeatedly deviate from reproducible evidence-bound scoring lose credibility in the reward process. Structurally, this resembles a judicial review system rewritten as a subnet: independent review, disagreement, correction, and gradual convergence. The point is not to make law objective. The point is to make fabricated certainty economically visible.
 
 ---
 

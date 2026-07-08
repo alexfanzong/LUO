@@ -6,10 +6,10 @@
 
 # Legal Uncertainty Oracle
 
-**LUO is a Bittensor testnet subnet runtime for validator-scored legal uncertainty maps.**
+**A Bittensor subnet for source-backed legal uncertainty maps in fast-changing domains.**
 
 [View Demo](https://alexfanzong.github.io/LUO/) ·
-[Miner Entry Contract](public/miner_entry.json) ·
+[Miner Entry](public/miner_entry.json) ·
 [Subnet Status](public/subnet_status.json) ·
 [Map Packet Schema](public/map_packet.schema.json)
 
@@ -19,96 +19,111 @@
 
 ## What LUO Is
 
-LUO is a public demo of a Bittensor-style subnet runtime where miners produce source-bound legal uncertainty maps and validators convert accepted submissions into UID weights.
+Legal Uncertainty Oracle (LUO) is a validator-scored subnet runtime for producing structured legal uncertainty maps.
 
-LUO does not reward the most confident legal answer. It rewards map packets that preserve evidence boundaries, jurisdictional divergence, and unresolved gaps.
+LUO is built for questions where a single confident answer is risky: Web3, AI, RWA, cross-border compliance, sanctions-sensitive products, custody models, and other domains where rules move quickly across jurisdictions.
 
-The current public runtime narrative is:
+The core output is a **Map Packet**: a machine-readable artifact that links a concrete question to reviewed sources, jurisdictional divergence, unresolved gaps, and validator scores.
+
+## Not A Legal AI Contest
+
+LUO does not try to crown the best general-purpose legal agent.
+
+For legal work, average model performance is less important than issue-specific reliability. A client does not buy the title of "best AI"; they need to know whether a particular answer to a particular question can be trusted, where it is supported, and where it remains uncertain.
+
+LUO therefore scores the packet, not the brand of the model behind it.
+
+Miners can use different models, retrieval systems, source pipelines, citation checkers, and domain-specific workflows. The validator evaluates the submitted packet against the question and source boundary.
+
+## Subnet Flow
 
 ```text
-Hotkey identity
-  -> Synapse challenge
-  -> schema-bound Map Packet response
-  -> validator score
-  -> hard-gated weight output
+Concrete legal uncertainty question
+  -> compact miner challenge
+  -> schema-bound miner submission
+  -> validator-scored Map Packet
+  -> UID weight output
 ```
 
-The flagship public challenge is `LUO-OUSG-XJ-V1`, an OUSG cross-jurisdiction map across the United States, Hong Kong, Singapore, and the European Union.
+Miner-facing challenges are intentionally compact. A challenge contains:
 
-## Miner Entry
+- `challenge_id`
+- `question`
+- `required_jurisdictions`
+- `corpus_manifest`
+- `schema_uri`
 
-Miners join by hotkey identity. They receive a compact challenge payload with a question, jurisdiction scope, corpus manifest, and response schema.
+The challenge does not ask a miner to produce free-form legal advice. It asks for a structured packet that can be checked.
 
-The public challenge shape includes:
+## Why Miners Can Compete
 
-```json
-{
-  "challenge_id": "LUO-OUSG-XJ-V1",
-  "question": "Map OUSG eligibility and transfer boundaries...",
-  "required_jurisdictions": ["US", "HK", "SG", "EU"],
-  "corpus_manifest": {
-    "manifest_id": "luo-ousg-demo-manifest",
-    "schema_uri": "/miner_submission.schema.json",
-    "as_of_date": "2026-06-07",
-    "corpus_hash_commitment": "<corpus_hash_commitment>"
-  }
-}
-```
+If every miner only sends the same prompt to the same model, there is no durable edge.
 
-Two distinct schema-bound objects flow through the runtime — do not confuse them:
+LUO is designed so miner advantage can come from:
 
-- **Miner submission** (`luo.miner_submission.v1`): what a miner sends in response to a challenge.
-  - [public/miner_submission.schema.json](public/miner_submission.schema.json)
-  - [public/sample_miner_submission.json](public/sample_miner_submission.json)
-- **Map Packet** (`1.0`): the validator-accepted round artifact that downstream systems consume and hash-anchor.
-  - [public/map_packet.schema.json](public/map_packet.schema.json)
-- [public/miner_entry.json](public/miner_entry.json)
-- [public/subnet_status.json](public/subnet_status.json)
+- fresher and cleaner source pipelines,
+- stronger jurisdiction-specific retrieval,
+- better claim-to-citation binding,
+- domain specialization in Web3, AI, RWA, sanctions, custody, or cross-border compliance,
+- lower cost and lower latency,
+- stable packet generation over repeated rounds.
 
-## Validator Scoring
+The useful miner is not merely the one with a louder answer. It is the one that repeatedly submits packets that remain grounded when the question, jurisdiction mix, and source boundary change.
 
-The public demo uses LUO scoring `v1.1`:
+## Reviewed Sources And Candidate Sources
 
-| Dimension | Weight | Meaning |
+The current demo starts from reviewed source packs and public benchmark cases.
+
+In a production setting, miners may also surface candidate sources through their submissions. Candidate sources should not automatically enter the reviewed source base. They need validation for authenticity, date, jurisdiction, relevance, and claim support before they can influence later rounds.
+
+This keeps LUO from becoming a raw data dump. The network rewards evidence mapping, not unreviewed accumulation.
+
+## Scoring Philosophy
+
+The public demo exposes LUO scoring at the level needed for integration:
+
+| Dimension | Weight | What It Measures |
 | --- | ---: | --- |
-| `citation_validity` | 0.50 | Cited source IDs exist and support the claimed legal boundary. |
-| `divergence_fidelity` | 0.30 | The packet preserves real jurisdictional disagreement instead of flattening it. |
-| `reasoning_coherence` | 0.15 | Claims, source anchors, and conclusions form a coherent reasoning chain. |
-| `coverage_breadth` | 0.05 | Required jurisdictions are covered without rewarding padding. |
+| `citation_validity` | 0.50 | Whether cited sources exist and support the claimed legal boundary. |
+| `divergence_fidelity` | 0.30 | Whether the packet preserves real jurisdictional disagreement instead of flattening it. |
+| `reasoning_coherence` | 0.15 | Whether claims, source anchors, and conclusions form a coherent chain. |
+| `coverage_breadth` | 0.05 | Whether the required jurisdiction scope is covered without rewarding padding. |
 
-Hard gate:
+Unsupported source claims are not eligible for emission weight in the validator round.
 
-```text
-fake source / missing source / mismatched source
-  -> zero emission weight
-```
+The public schema explains the expected packet shape. Live validation sets, challenge rotation, and production evaluation data are not part of this public demo surface.
 
-The demo status file exposes the current runtime result:
+## Rotating Validation
 
-```text
-Round: LUO-OUSG-XJ-V1
-Winner UID: 3
-Winner score: 0.9625
-Gate policy: invalid-source hit -> weight 0
-```
+Public rules are useful. Fixed public validation surfaces are not.
 
-## Commercial Roadmap
+LUO can rotate questions, jurisdiction combinations, source manifests, and validation checks across rounds. This allows miners to improve their evidence pipelines without turning the subnet into a fixed benchmark that can be memorized after one round.
 
-LUO starts with one narrow wedge: cross-border Web3 products that cannot afford fake legal certainty. Tokenized treasuries, stablecoin flows, custody models, sanctions-sensitive tools, and RWA distribution all share the same problem. Teams need to know where a claim is supported, where jurisdictions diverge, and where a model has filled a gap with confidence.
+The stable public contract is the packet format and scoring philosophy. The live validation surface can change.
 
-The first commercial users are compliance and product teams preparing market entry decisions. They do not need another chatbot. They need a source-bound packet they can hand to counsel, risk, BD, or an execution system without losing the legal boundary.
+## Public Artifacts
 
-| Stage | Product | Buyer | Output |
-| --- | --- | --- | --- |
-| 1 | Public subnet demo | Builders, hackathon judges, early partners | A live proof that miners can submit legal uncertainty maps and validators can score them. |
-| 2 | Benchmark rounds | RWA issuers, compliance teams, exchanges, custodians | Case-specific map packets for products such as tokenized treasuries, stablecoins, custody, and sanctions screening. |
-| 3 | Review dashboard | Legal, risk, and product teams | A workspace for comparing jurisdictions, citations, unresolved gaps, and downstream-use limits. |
-| 4 | API and packet layer | AI agent platforms, compliance tooling, and protocol teams | Machine-readable map packets that downstream systems can consume before execution. |
-| 5 | Production subnet | Bittensor miners, validators, and enterprise customers | A market for source-backed legal map formation, with validator weights tied to citation validity and divergence fidelity. |
+- [public/miner_entry.json](public/miner_entry.json): public miner entry contract
+- [public/miner_submission.schema.json](public/miner_submission.schema.json): miner submission schema
+- [public/sample_miner_submission.json](public/sample_miner_submission.json): example schema-bound submission
+- [public/map_packet.schema.json](public/map_packet.schema.json): accepted Map Packet schema
+- [public/subnet_status.json](public/subnet_status.json): public demo round status
 
-LUO can earn revenue before the full subnet is live. The near-term product is a paid benchmark and review workflow for high-value Web3 legal questions. The medium-term product is an API that returns reviewed Map Packets. The long-term product is a subnet where miners compete to form useful legal maps and validators reward packets that stay inside the evidence boundary.
+## Commercial Wedge
 
-The wedge is narrow on purpose. LUO should first become the best way to map legal uncertainty for programmable compliance. Once that loop works, the same packet format can support market-entry review, RWA onboarding, exchange listing checks, agent preflight, and compliance receipts.
+LUO starts narrow: high-uncertainty legal domains where ordinary search and static memos age quickly.
+
+The first users are product, compliance, and legal teams evaluating market entry, tokenized asset distribution, custody structure, sanctions exposure, AI governance obligations, or cross-border operating constraints.
+
+LUO does not replace counsel. It standardizes the evidence layer that counsel and downstream systems can review.
+
+| Stage | Product | Output |
+| --- | --- | --- |
+| 1 | Public subnet demo | A working surface for challenge, submission, scoring, and packet output. |
+| 2 | Benchmark rounds | Case-specific Map Packets for high-value Web3 and AI legal questions. |
+| 3 | Review dashboard | A workspace for comparing citations, jurisdictions, uncertainty, and unresolved gaps. |
+| 4 | Packet API | Machine-readable packets for compliance tools and downstream agents. |
+| 5 | Production subnet | A market where miners compete on source-backed legal map formation. |
 
 ## Local Development
 
@@ -152,13 +167,11 @@ The Vite build uses relative asset paths so the generated static bundle can be s
 │   ├── assets/
 │   ├── main.jsx
 │   └── styles.css
-├── docs/
-├── pitch_demo_terminal/
-└── submission_assets/
+└── docs/
 ```
 
 ## Status
 
-This repository is a demonstration build. It is not legal advice.
+This repository is a research and demonstration build. It is not legal advice, not a legal opinion, and not a basis for offering, transfer, or compliance decisions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

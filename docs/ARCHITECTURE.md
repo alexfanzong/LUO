@@ -1,91 +1,102 @@
-# LUO Architecture Overview
+# LUO Protocol Overview
 
-LUO is designed as legal uncertainty infrastructure: a system for retrieving legal evidence, preserving jurisdictional disagreement, and validating whether a miner's answer is grounded in real citations.
+Legal Uncertainty Oracle (LUO) is an evidence-layer protocol for producing validator-scored legal uncertainty maps.
+
+It is not a general legal chatbot, and it is not a leaderboard for the best legal AI. LUO evaluates a submitted Map Packet for a concrete question, source boundary, and jurisdiction scope.
+
+## Design Principle
+
+Final legal judgment is bespoke. The evidence layer can be standardized.
+
+LUO standardizes:
+
+- the challenge shape,
+- the submission schema,
+- source grounding,
+- jurisdictional divergence,
+- unresolved-gap reporting,
+- validator scoring,
+- packet output for downstream systems.
+
+LUO does not standardize or replace the final legal opinion.
 
 ## Core Loop
 
 ```text
-User question
-  -> miner retrieves jurisdiction-aware evidence
-  -> miner produces a cited legal uncertainty map
-  -> validator audits citation existence, invalid-source exposure, and claim-evidence closure
-  -> consensus rewards faithful uncertainty mapping
+Question
+  -> reviewed source boundary
+  -> compact miner challenge
+  -> schema-bound miner submission
+  -> validator-scored Map Packet
+  -> UID weight output
 ```
 
-## Components
+## 1. Reviewed Source Boundary
 
-### 1. Evidence Corpus
+Each round begins with a bounded source base and a challenge manifest. The source base is treated as reviewed input for the validator round, not as an open data dump.
 
-The MVP uses a curated Tornado Cash legal corpus covering four target jurisdictions:
+This allows miners to compete on retrieval, interpretation, and packet quality while keeping the validation target checkable.
 
-- United States
-- Netherlands
-- Switzerland
-- Hong Kong
+## 2. Miner Submission
 
-The corpus is built to distinguish:
+Miners submit structured packets, not free-form answers.
 
-- explicit enforcement positions,
-- judicial reversals,
-- criminal prosecution theories,
-- regulatory silence,
-- framework-only materials,
-- cross-jurisdiction comparison.
+A miner packet can include:
 
-The demo describes this source set at a high level and focuses on the validator flow.
+- mapped jurisdictions,
+- source-backed claims,
+- divergence pairs,
+- unresolved gaps,
+- confidence boundaries,
+- citations,
+- downstream-use limits.
 
-### 2. Miner Retrieval
+Miners may use their own models, retrieval systems, citation checkers, and domain-specific workflows. The validator only accepts what survives source-bound review.
 
-Miners are expected to retrieve relevant legal evidence before answering. The MVP uses local retrieval for reliability:
+## 3. Candidate Sources
 
-- local embeddings,
-- vector search,
-- source IDs,
-- jurisdiction labels,
-- legal-position labels.
+Production LUO can allow miners to surface candidate sources.
 
-The important rule is simple: a miner must show its evidence before it claims certainty.
+Candidate sources should be evaluated before they affect the reviewed source base. A useful review process checks source authenticity, date, jurisdiction, relevance, and whether the cited text actually supports the submitted claim.
 
-### 3. Invalid-Source Checks
+This gives miners room to contribute discovery and freshness without letting unreviewed material control the map.
 
-The MVP includes invalid-source checks. These test whether a miner can preserve uncertainty instead of manufacturing a confident answer from fake or mismatched authorities.
+## 4. Validator Scoring
 
-Invalid-source checks make fabricated certainty visible inside the scoring loop.
+The public demo exposes the scoring philosophy:
 
-### 4. Validator Audit
+- citation validity,
+- divergence fidelity,
+- reasoning coherence,
+- coverage breadth.
 
-Validators evaluate miner outputs across three broad dimensions:
+Unsupported source claims are not eligible for emission weight in the validator round.
 
-- whether cited source IDs exist,
-- whether the miner exposes itself to invalid-source checks,
-- whether each claim stays closed within the cited evidence boundary.
+The public protocol describes the output shape and scoring philosophy. Production evaluation data and live validation sets should remain separate from public documentation.
 
-The MVP keeps validator scoring reproducible for demo purposes. Later versions can add LLM-as-Judge review and multi-validator consensus.
+## 5. Rotating Validation
 
-### 5. Public Demo Surface
+LUO should not rely on a fixed public test set.
 
-The public demo is a static HTML experience that explains the mechanism:
+The public layer can describe the challenge format, packet schema, and scoring philosophy. The live validation layer can rotate questions, jurisdiction combinations, source manifests, and validation checks across rounds.
 
-- Opening: why fabricated certainty is dangerous.
-- Search: how miner retrieval exposes citations.
-- Audit: how validator scoring separates faithful answers from fabricated ones.
-- Atlas: how one protocol can have four legal treatments.
-- Close: why the subnet rewards uncertainty mapping instead of single-answer generation.
+This lets miners build durable advantages around evidence pipelines, source review, and citation discipline without making a single round memorisable.
 
-## Roadmap
+## 6. Map Packet Output
 
-### Phase 1 - Evidence and Scoring MVP
+The accepted packet is the commodity LUO produces.
 
-Completed: static demo, curated corpus, local retrieval, preset miner outputs, validator scoring, optional LLM backend.
+Downstream systems should consume the accepted Map Packet, not a free-form legal answer. A packet can support review dashboards, compliance preflight, agent execution constraints, audit trails, and counsel-facing source review.
 
-### Phase 2 - Staked Challenge Layer
+## Scope
 
-Participants can stake to challenge validator scores. This turns review into an appeal-like mechanism and rewards validators who anticipate durable consensus.
+LUO is strongest in high-uncertainty legal domains:
 
-### Phase 3 - RWA Vertical Market
+- Web3 and tokenized assets,
+- AI governance,
+- RWA distribution,
+- sanctions-sensitive products,
+- custody and market-entry questions,
+- cross-border compliance.
 
-Extend LUO from Tornado Cash to tokenized real-world assets, stablecoins, custody, sanctions, securities, commodities, tax, and cross-border distribution.
-
-### Phase 4 - Production Subnet Candidate
-
-Define miner/validator task specs, publish benchmark subsets, add multi-validator aggregation, and harden the citation audit pipeline.
+These domains change quickly, differ across jurisdictions, and often do not have a single stable public answer.

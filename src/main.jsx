@@ -14,11 +14,26 @@ const phases = [
   ['04', 'Weight', 'accepted packet']
 ];
 
+const thesisCards = [
+  [
+    'Not a Legal AI leaderboard',
+    'LUO does not rank general-purpose agents. It scores a submitted packet for one concrete legal uncertainty question.'
+  ],
+  [
+    'Reviewed source base',
+    'The validator starts from reviewed legal sources and compact challenge manifests. The live validation surface can rotate across rounds.'
+  ],
+  [
+    'Miner advantage',
+    'Miners compete on domain coverage, source freshness, citation discipline, speed, cost, and stable packet generation, not only on prompt wording.'
+  ]
+];
+
 const mechanismSteps = [
-  ['01', 'Source Pack', 'Bound the legal corpus before miners touch the task. Real sources and invalid-source checks enter together.'],
-  ['02', 'Miner Maps', 'Miners produce jurisdiction-aware uncertainty maps instead of confident legal answers.'],
-  ['03', 'Validator Score', 'Validators check citations first, then score divergence fidelity and reasoning quality.'],
-  ['04', 'Accepted Packet', 'The highest-weight packet becomes a reusable map for downstream agents or products.']
+  ['01', 'Reviewed Source Base', 'The round starts from a bounded set of reviewed sources and a compact challenge manifest.'],
+  ['02', 'Miner Packet', 'Miners submit jurisdiction-aware map packets instead of free-form legal answers.'],
+  ['03', 'Validator Score', 'Validators check source grounding, legal divergence, reasoning, and coverage.'],
+  ['04', 'Accepted Packet', 'Accepted packets become reusable evidence-layer artifacts for downstream products and counsel review.']
 ];
 
 const subnetEntrySteps = [
@@ -40,7 +55,7 @@ const subnetRuntimeStats = [
   ['Subnet', 'LUO Legal Uncertainty Oracle'],
   ['Round', 'LUO-OUSG-XJ-V1'],
   ['Winner UID', '3 · score 0.9625'],
-  ['Gate policy', 'invalid-source hit → weight 0'],
+  ['Gate policy', 'unsupported source → weight 0'],
   ['Status file', 'subnet_status.json']
 ];
 
@@ -57,6 +72,15 @@ function scorePercent(value) {
   return `${Math.round(value * 100)}%`;
 }
 
+function challengeJurisdictions(active) {
+  const hiddenNodeIds = new Set(['REF', 'CHECK', 'OUT']);
+  const jurisdictions = active.nodes
+    .map((node) => node.id)
+    .filter((id) => !hiddenNodeIds.has(id));
+
+  return jurisdictions.length ? jurisdictions.join(' / ') : 'Source-bound scope';
+}
+
 function FormulaBlock({ active }) {
   const values = Object.fromEntries(active.validator.checks);
   const composite = scoreWeights.reduce((sum, [name, weight]) => sum + (values[name] || 0) * weight, 0);
@@ -65,10 +89,10 @@ function FormulaBlock({ active }) {
     <section className="formula-panel" id="scoring">
       <div className="section-copy">
         <span>Validator mechanism</span>
-        <h2>The winner is not the loudest answer. It is the best map.</h2>
+        <h2>The winner is the most reliable packet for this question.</h2>
         <p>
-          LUO scores miner submissions as evidence-bound map packets. A miner can win only if it cites real sources,
-          keeps legal divergence intact, and avoids fabricated certainty.
+          LUO scores the submitted Map Packet, not the miner's brand or model choice. The packet must preserve
+          evidence boundaries, jurisdictional disagreement, and unresolved gaps.
         </p>
       </div>
 
@@ -80,8 +104,8 @@ function FormulaBlock({ active }) {
           </strong>
         </div>
         <div className="gate-line">
-          <code>Hard Gate</code>
-          <p>If a miner cites a fake, missing, or mismatched source, final score is capped at 0.25.</p>
+          <code>Source Gate</code>
+          <p>Unsupported source claims are not eligible for emission weight in the validator round.</p>
         </div>
         <div className="weight-grid">
           {scoreWeights.map(([name, weight, copy]) => (
@@ -229,6 +253,8 @@ function App() {
   const active = cases[caseId].modes[mode];
   const mapPacket = useMemo(() => createMapPacket(active, { caseId, mode }), [active, caseId, mode]);
   const mapPacketJson = useMemo(() => JSON.stringify(mapPacket, null, 2), [mapPacket]);
+  const challengeId = mapPacket.acceptedSubmission.challengeId;
+  const acceptedMinerLabel = active.packet.route.split(' · ')[0];
 
   function clearPhaseTimers() {
     phaseTimers.current.forEach(window.clearTimeout);
@@ -337,34 +363,53 @@ function App() {
 
       <section className="product-strip" id="product">
         <article>
-          <span>Commodity</span>
-          <strong>Source-backed map packets</strong>
-          <p>Structured legal uncertainty maps that downstream agents can consume without re-litigating the corpus.</p>
+          <span>Output</span>
+          <strong>Source-backed Map Packets</strong>
+          <p>Machine-readable legal uncertainty maps for one product, question, and jurisdiction scope.</p>
         </article>
         <article>
-          <span>Network Role</span>
-          <strong>Miner retrieval, validator scoring</strong>
-          <p>Miners compete on map formation. Validators weight outputs by evidence discipline.</p>
+          <span>Focus</span>
+          <strong>High-uncertainty domains</strong>
+          <p>Designed for Web3, AI, RWA, and cross-border compliance questions where rules change quickly.</p>
         </article>
         <article>
-          <span>Consumer</span>
-          <strong>Sentinel and downstream risk products</strong>
-          <p>Execution layers consume accepted packets, not free-form legal answers.</p>
+          <span>Role</span>
+          <strong>Evidence layer, not legal advice</strong>
+          <p>LUO standardizes source grounding and divergence mapping. Final legal judgment stays with users and counsel.</p>
         </article>
         <article>
           <span>Subnet access</span>
           <strong>Hotkey-based miner entry</strong>
-          <p>The runtime accepts miner hotkeys, scores packet submissions by UID, and converts accepted scores into validator weights.</p>
+          <p>Miners submit schema-bound packets. Validators convert accepted scores into UID weights.</p>
         </article>
+      </section>
+
+      <section className="thesis-section" aria-label="LUO positioning">
+        <div className="section-copy">
+          <span>Protocol position</span>
+          <h2>Not a contest for the best legal agent.</h2>
+          <p>
+            LUO evaluates issue-specific reliability. The question is not which AI is best on average,
+            but which submitted packet can be trusted for the legal uncertainty at hand.
+          </p>
+        </div>
+        <div className="thesis-grid">
+          {thesisCards.map(([title, copy]) => (
+            <article key={title}>
+              <strong>{title}</strong>
+              <p>{copy}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="mechanism-section" id="mechanism">
         <div className="section-copy">
           <span>Subnet round</span>
-          <h2>From sources to an accepted legal map.</h2>
+          <h2>From a concrete question to an accepted map.</h2>
           <p>
-            The radar visualizes the completed local validator round. Each step turns raw legal material into
-            a scored packet with clear source boundaries.
+            A round begins with a bounded legal uncertainty question. Miners submit packets. The validator
+            accepts the packet that best preserves source boundaries and jurisdictional divergence.
           </p>
         </div>
         <div className="mechanism-rail">
@@ -384,7 +429,7 @@ function App() {
           <h2>LUO testnet subnet runtime.</h2>
           <p>
             This is the operating surface miners connect to: hotkey identity, compact challenge payload,
-            schema-bound packet response, validator scoring, hard gate, accepted packet, and UID weight output.
+            schema-bound packet response, validator scoring, accepted packet, and UID weight output.
           </p>
         </div>
         <div className="join-panel">
@@ -444,12 +489,18 @@ function App() {
       <section className="demo-section" id="demo">
         <div className="section-copy">
           <span>Live product surface</span>
-          <h2>Validator radar dashboard.</h2>
+          <h2>Map one legal uncertainty question.</h2>
           <p>
-            This is the dashboard inside the product site: choose a benchmark, inspect source packs,
-            run the completed validator round, and open the accepted map output.
+            The dashboard shows how a concrete question becomes a challenge payload, competing miner packets,
+            a validator scorecard, and an accepted Map Packet.
           </p>
         </div>
+
+        <section className="question-banner" aria-label="Active challenge">
+          <span>ACTIVE CHALLENGE</span>
+          <strong>{active.request}</strong>
+          <small>{challengeId} · {challengeJurisdictions(active)} · schema-bound Map Packet submission</small>
+        </section>
 
         <section className="demo-shell">
           <section className="left-rail" id="sources">
@@ -468,7 +519,7 @@ function App() {
                   <>
                     <span>{source.id}</span>
                     <strong>{source.title}</strong>
-                    <small>{source.url ? `${source.jurisdiction} · open source ↗` : source.invalidSource ? 'invalid-source check' : source.jurisdiction}</small>
+                    <small>{source.url ? `${source.jurisdiction} · open source ↗` : source.invalidSource ? 'source-boundary check' : source.jurisdiction}</small>
                   </>
                 );
 
@@ -496,6 +547,28 @@ function App() {
                 <button className={mode === 'single' ? 'selected' : ''} onClick={() => setMode('single')}>Single</button>
               </nav>
             </header>
+
+            <section className="challenge-card" aria-label="Challenge payload">
+              <header>
+                <span>CHALLENGE PAYLOAD</span>
+                <code>{challengeId}</code>
+              </header>
+              <p>{active.request}</p>
+              <div className="challenge-meta">
+                <article>
+                  <span>Jurisdictions</span>
+                  <strong>{challengeJurisdictions(active)}</strong>
+                </article>
+                <article>
+                  <span>Corpus manifest</span>
+                  <strong>Reviewed source base</strong>
+                </article>
+                <article>
+                  <span>Required output</span>
+                  <strong>Map Packet submission</strong>
+                </article>
+              </div>
+            </section>
 
             <div className="phase-strip" aria-label="Validator phase controls">
               {phases.map(([number, label, detail], index) => (
@@ -592,7 +665,7 @@ function App() {
 
             <footer className="command-bar">
               <label>
-                <span>VALIDATOR TASK</span>
+                <span>QUESTION SENT TO MINERS</span>
                 <input value={active.request} readOnly />
               </label>
               <button onClick={replay}>Run Round</button>
@@ -601,7 +674,10 @@ function App() {
 
           <aside className="score-panel">
             <header>
-              <span>VALIDATOR SCORECARD</span>
+              <div>
+                <span>VALIDATOR SCORECARD</span>
+                <small>Score for {acceptedMinerLabel} submission</small>
+              </div>
               <strong>{active.validator.overall}</strong>
             </header>
 
@@ -634,7 +710,7 @@ function App() {
               <span>SUBNET MINER ENTRY</span>
               <strong>Hotkey in, claims out, weights back.</strong>
               <p>
-                Miners register hotkeys, answer compact challenges, submit structured map claims, and receive validator weight from accepted scores.
+                Miners register hotkeys, answer compact challenges, and submit structured claims that can be checked against sources.
               </p>
               <a href="#join-subnet">View access path</a>
             </div>
@@ -665,10 +741,10 @@ function App() {
       <section className="case-section" id="cases">
         <div className="section-copy">
           <span>Benchmark cases</span>
-          <h2>Two cases, one validator logic.</h2>
+          <h2>High-uncertainty benchmarks.</h2>
           <p>
-            OUSG shows product eligibility and cross-jurisdiction transfer boundaries.
-            Tornado Cash shows how the subnet preserves regulatory divergence and catches fabricated certainty.
+            OUSG and Tornado Cash demonstrate the type of questions LUO is built for:
+            fast-changing, cross-jurisdictional, source-sensitive legal uncertainty.
           </p>
         </div>
         <div className="case-grid">
@@ -691,11 +767,12 @@ function App() {
       <footer className="site-footer">
         <div className="footer-brand">
           <img src={wordmark} alt="" />
-          <p>Legal Uncertainty Oracle turns reviewed sources into validator-scored legal map packets.</p>
+          <p>Legal Uncertainty Oracle produces source-backed Map Packets for high-uncertainty legal domains.</p>
           <div className="social-row" aria-label="Social links">
-            <a href="https://github.com/alexfanzong/LUO" target="_blank" rel="noreferrer noopener">GH</a>
-            <a href="#top">X</a>
-            <a href="#top">DC</a>
+            <a href="https://github.com/alexfanzong/LUO" target="_blank" rel="noreferrer noopener">G</a>
+            <a href="https://x.com/itsAlexFan" target="_blank" rel="noreferrer noopener">X</a>
+            <a href="https://discord.gg/JXHMPcq4" target="_blank" rel="noreferrer noopener">DC</a>
+            <a href="https://bittensor.com/" target="_blank" rel="noreferrer noopener">BT</a>
           </div>
         </div>
         <div>
@@ -709,15 +786,15 @@ function App() {
           <strong>Resources</strong>
           <a href="#sources">Source packs</a>
           <a href="#cases">Benchmarks</a>
+          <a href="https://bittensor.com/" target="_blank" rel="noreferrer noopener">Bittensor</a>
           <a href="https://taostats.io/subnets" target="_blank" rel="noreferrer noopener">Subnet explorer</a>
         </div>
         <div>
-          <strong>Company</strong>
-          <a href="#top">Legal Uncertainty Oracle</a>
-          <a href="#top">Testnet-ready prototype</a>
-          <a href="#top">Contact</a>
+          <strong>Contact</strong>
+          <a href="https://x.com/itsAlexFan" target="_blank" rel="noreferrer noopener">X</a>
+          <a href="https://discord.gg/JXHMPcq4" target="_blank" rel="noreferrer noopener">Discord</a>
         </div>
-        <small>© 2026 LUO. Source-backed map formation for Bittensor subnet deployment.</small>
+        <small>© 2026 LUO. Research demo only. Not legal advice, not a legal opinion, and not a basis for offering, transfer, or compliance decisions.</small>
       </footer>
     </main>
   );
