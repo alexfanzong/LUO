@@ -27,20 +27,18 @@
     "submission_schema": "/miner_submission.schema.json"
   },
   "validatorEpoch": {
-    "winner_uid": 3,
-    "winner_score": 0.9625,
+    "winner_uid": 1,
+    "winner_score": 1.0,
     "accepted_packet": "LUO-OUSG-XJ-202607-0001",
     "gated_uid_policy": "zero_emission_weight",
     "emission_model": "subnet_emissions_are_allocated_by_validator_weights_not_fixed_answer_bounties",
     "weight_output": {
-      "1": 0.3306,
-      "2": 0.0,
-      "3": 0.6694
+      "1": 1.0
     }
   },
   "minerEntry": {
     "identity": "hotkey",
-    "challenge_transport": "LuoSynapse",
+    "challenge_transport": "MapPacketSynapse",
     "public_entry_contract": "/miner_entry.json",
     "required_response": [
       "citations",

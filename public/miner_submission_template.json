@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "luo.miner_submission.v1",
+  "challengeId": "LUO-OUSG-XJ-V1",
+  "minerHotkey": "<YOUR_MINER_HOTKEY_OR_UID>",
+  "question": "Map OUSG eligibility and transfer boundaries across the United States, Hong Kong, Singapore, and the European Union. Preserve jurisdictional divergence; do not convert silence, conditional frameworks, or classification gaps into permission.",
+  "requiredJurisdictions": ["US", "HK", "SG", "EU"],
+  "corpusManifest": {
+    "manifestId": "public-demo-ousg-manifest",
+    "asOfDate": "2026-07-08",
+    "sourceCount": 0,
+    "publicNote": "Participant may use public sources and their own research workflow. Validator will evaluate source grounding and packet quality."
+  },
+  "citations": [
+    {
+      "sourceId": "SRC-01",
+      "jurisdiction": "US",
+      "claimIds": ["CLAIM-US-01"]
+    }
+  ],
+  "mapClaims": [
+    {
+      "claimId": "CLAIM-US-01",
+      "jurisdiction": "US",
+      "claim": "<Write the source-backed jurisdiction-specific claim here.>",
+      "sourceIds": ["SRC-01"],
+      "confidence": "medium",
+      "notSupported": "<Write what this source does not prove.>"
+    }
+  ],
+  "divergencePairs": [
+    {
+      "pairId": "PAIR-01",
+      "factInQuestion": "<Write the legal or compliance boundary being compared.>",
+      "jurisdictions": ["US", "EU"],
+      "divergenceType": "<Example: restrictive_vs_conditional, silence_vs_permission, classification_gap>",
+      "sourceIds": ["SRC-01"]
+    }
+  ],
+  "unresolvedGaps": [
+    {
+      "gapId": "GAP-01",
+      "jurisdiction": "EU",
+      "description": "<Write what remains unresolved or requires counsel review.>",
+      "requiredNextStep": "<Write the next evidence or review step.>"
+    }
+  ]
+}

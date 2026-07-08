@@ -1,0 +1,31 @@
+{
+  "challengeType": "luo.challenge.v1",
+  "challengeId": "LUO-OUSG-XJ-V1",
+  "network": {
+    "chain": "bittensor",
+    "network": "test",
+    "netuid": 525
+  },
+  "question": "Map OUSG eligibility and transfer boundaries across the United States, Hong Kong, Singapore, and the European Union. Preserve jurisdictional divergence; do not convert silence, conditional frameworks, or classification gaps into permission.",
+  "requiredJurisdictions": ["US", "HK", "SG", "EU"],
+  "submissionSchema": "/miner_submission.schema.json",
+  "submissionTemplate": "/miner_submission_template.json",
+  "corpusManifest": {
+    "manifestId": "public-demo-ousg-manifest",
+    "asOfDate": "2026-07-08",
+    "publicNote": "Public demo challenge. Live validation materials may rotate across rounds."
+  },
+  "expectedOutput": [
+    "citations",
+    "mapClaims",
+    "divergencePairs",
+    "unresolvedGaps"
+  ],
+  "scoring": {
+    "citation_validity": 0.5,
+    "divergence_fidelity": 0.3,
+    "reasoning_coherence": 0.15,
+    "coverage_breadth": 0.05
+  },
+  "notLegalAdvice": true
+}

@@ -9,6 +9,7 @@
 **A Bittensor subnet for source-backed legal uncertainty maps in fast-changing domains.**
 
 [View Demo](https://alexfanzong.github.io/LUO/) ·
+[Miner Quickstart](docs/MINER_QUICKSTART.md) ·
 [Miner Entry](public/miner_entry.json) ·
 [Subnet Status](public/subnet_status.json) ·
 [Map Packet Schema](public/map_packet.schema.json)
@@ -137,6 +138,11 @@ The stable public contract is the packet format and scoring philosophy. The live
 
 ## Public Artifacts
 
+The public surface is enough for a new miner to understand the entry path, response shape, and scoring philosophy. Historical ideathon submission materials, private corpora, answer keys, trap sets, wallet material, and production evaluator data stay out of the public repo.
+
+- [docs/MINER_QUICKSTART.md](docs/MINER_QUICKSTART.md): miner onboarding and OUSG demo instructions
+- [public/ousg_challenge.json](public/ousg_challenge.json): OUSG challenge payload
+- [public/miner_submission_template.json](public/miner_submission_template.json): starter JSON template for participants
 - [public/miner_entry.json](public/miner_entry.json): public miner entry contract
 - [public/miner_submission.schema.json](public/miner_submission.schema.json): miner submission schema
 - [public/sample_miner_submission.json](public/sample_miner_submission.json): example schema-bound submission
