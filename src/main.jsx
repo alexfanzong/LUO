@@ -16,24 +16,24 @@ const phases = [
 
 const thesisCards = [
   [
-    'Not a Legal AI leaderboard',
-    'LUO does not rank general-purpose agents. It scores a submitted packet for one concrete legal uncertainty question.'
+    'Not a Legal AI contest',
+    'LUO does not reward the model with the best brand name. It rewards the miner that returns the most reliable packet for a concrete legal uncertainty question.'
   ],
   [
-    'Reviewed source base',
-    'The validator starts from reviewed legal sources and compact challenge manifests. The live validation surface can rotate across rounds.'
+    'Continuous map formation',
+    'Regulatory maps age. Miners compete to monitor new sources, update jurisdiction boundaries, and preserve uncertainty when the law moves.'
   ],
   [
-    'Miner advantage',
-    'Miners compete on domain coverage, source freshness, citation discipline, speed, cost, and stable packet generation, not only on prompt wording.'
+    'Emission from weights',
+    'LUO does not pay a fixed bounty per answer. Validators score Map Packets and convert those scores into UID weights for subnet emissions.'
   ]
 ];
 
 const mechanismSteps = [
-  ['01', 'Reviewed Source Base', 'The round starts from a bounded set of reviewed sources and a compact challenge manifest.'],
-  ['02', 'Miner Packet', 'Miners submit jurisdiction-aware map packets instead of free-form legal answers.'],
-  ['03', 'Validator Score', 'Validators check source grounding, legal divergence, reasoning, and coverage.'],
-  ['04', 'Accepted Packet', 'Accepted packets become reusable evidence-layer artifacts for downstream products and counsel review.']
+  ['01', 'Owner Question', 'A user or subnet owner defines a high-value legal uncertainty question and the jurisdictions that matter.'],
+  ['02', 'Miner Monitoring', 'Miners track source changes, retrieve relevant materials, and submit jurisdiction-aware Map Packets.'],
+  ['03', 'Validator Score', 'Validators check source grounding, legal divergence, reasoning, and coverage without publishing the live answer key.'],
+  ['04', 'Weight Settlement', 'Accepted scores become UID weights on Bittensor; stronger packets receive a larger share of miner emissions.']
 ];
 
 const subnetEntrySteps = [
@@ -51,12 +51,31 @@ const minerEntryArtifacts = [
 ];
 
 const subnetRuntimeStats = [
-  ['Network', 'Bittensor test'],
-  ['Subnet', 'LUO Legal Uncertainty Oracle'],
+  ['Network', 'Bittensor testnet'],
+  ['Netuid', '525'],
+  ['Subnet', 'LUO'],
+  ['Registered', 'validator UID 0 · miner UID 1'],
   ['Round', 'LUO-OUSG-XJ-V1'],
-  ['Winner UID', '3 · score 0.9625'],
-  ['Gate policy', 'unsupported source → weight 0'],
-  ['Status file', 'subnet_status.json']
+  ['Settlement', 'score → UID weights → emission share']
+];
+
+const incentiveCards = [
+  [
+    'Beyond one-off consulting',
+    'A single legal memo can answer one client at one moment. LUO turns the repeatable layer behind that work into a market: monitoring, updating, and packaging jurisdictional uncertainty across many questions.'
+  ],
+  [
+    'Why miners join',
+    'Miners are rewarded for repeatable production advantages: fresher source pipelines, jurisdiction expertise, lower latency, better citation binding, and stable schema output.'
+  ],
+  [
+    'Why validators do not self-answer',
+    'A validator can generate one map, but the subnet needs competing producers. The validator keeps the scoring boundary, compares submissions, and settles weights instead of becoming the sole supplier.'
+  ],
+  [
+    'Scalable evidence production',
+    'LUO standardizes many researchers, models, and source pipelines into comparable packets that can be audited, refreshed, and rewarded over time.'
+  ]
 ];
 
 const scoreWeights = [
@@ -390,7 +409,7 @@ function App() {
           <h2>Not a contest for the best legal agent.</h2>
           <p>
             LUO evaluates issue-specific reliability. The question is not which AI is best on average,
-            but which submitted packet can be trusted for the legal uncertainty at hand.
+            but which submitted packet can be trusted, updated, and settled into subnet weights.
           </p>
         </div>
         <div className="thesis-grid">
@@ -406,10 +425,10 @@ function App() {
       <section className="mechanism-section" id="mechanism">
         <div className="section-copy">
           <span>Subnet round</span>
-          <h2>From a concrete question to an accepted map.</h2>
+          <h2>From a concrete question to emission weights.</h2>
           <p>
-            A round begins with a bounded legal uncertainty question. Miners submit packets. The validator
-            accepts the packet that best preserves source boundaries and jurisdictional divergence.
+            A round begins with a bounded legal uncertainty question. Miners produce updated maps.
+            Validators score the packets and convert the result into UID weights on Bittensor.
           </p>
         </div>
         <div className="mechanism-rail">
@@ -428,8 +447,8 @@ function App() {
           <span>Subnet console</span>
           <h2>LUO testnet subnet runtime.</h2>
           <p>
-            This is the operating surface miners connect to: hotkey identity, compact challenge payload,
-            schema-bound packet response, validator scoring, accepted packet, and UID weight output.
+            LUO is live on Bittensor testnet at netuid 525. The public demo shows the off-chain packet
+            workflow that feeds on-chain UID weight settlement.
           </p>
         </div>
         <div className="join-panel">
@@ -459,13 +478,13 @@ function App() {
           <div className="join-status">
             <article>
               <span>Runtime</span>
-              <strong>Validator epoch served</strong>
-              <small>UID 3 wins · gated UID weight 0 · packet emitted from structured winner claims</small>
+              <strong>Validator and baseline miner registered</strong>
+              <small>netuid 525 · validator UID 0 · miner UID 1 · external miners can register hotkeys</small>
             </article>
             <article>
               <span>Subnet IO</span>
               <strong>Challenge in, packet out, weights back</strong>
-              <small>network=test · hotkey identity · corpus manifest · schema response · normalized UID weights</small>
+              <small>question + source manifest → Map Packet → validator score → UID weights</small>
             </article>
           </div>
           <div className="entry-contract">
@@ -483,6 +502,25 @@ function App() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="incentive-section" id="incentives">
+        <div className="section-copy">
+          <span>Miner incentives</span>
+          <h2>The value is not one answer. It is continuous legal map maintenance.</h2>
+          <p>
+            Direct legal BD is still valuable. LUO exists for the repeatable layer underneath it:
+            who can keep legal uncertainty maps current as sources, enforcement posture, and jurisdictional boundaries change.
+          </p>
+        </div>
+        <div className="incentive-grid">
+          {incentiveCards.map(([title, copy]) => (
+            <article key={title}>
+              <strong>{title}</strong>
+              <p>{copy}</p>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -741,10 +779,10 @@ function App() {
       <section className="case-section" id="cases">
         <div className="section-copy">
           <span>Benchmark cases</span>
-          <h2>High-uncertainty benchmarks.</h2>
+          <h2>Benchmarks for maps that need to stay current.</h2>
           <p>
             OUSG and Tornado Cash demonstrate the type of questions LUO is built for:
-            fast-changing, cross-jurisdictional, source-sensitive legal uncertainty.
+            fast-changing, cross-jurisdictional, source-sensitive legal uncertainty that cannot be frozen into a one-time answer.
           </p>
         </div>
         <div className="case-grid">
@@ -780,6 +818,7 @@ function App() {
           <a href="#demo">Dashboard</a>
           <a href="#join-subnet">Miner entry</a>
           <a href="#mechanism">Subnet round</a>
+          <a href="#incentives">Miner incentives</a>
           <a href="#scoring">Validator score</a>
         </div>
         <div>

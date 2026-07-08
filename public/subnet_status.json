@@ -1,8 +1,25 @@
 {
   "statusType": "luo.bittensor.subnet_status.v1",
   "network": "bittensor-test",
+  "netuid": 525,
   "subnet": "LUO Legal Uncertainty Oracle",
   "runtime": "miner-validator-map-packet",
+  "chainState": {
+    "subnet_registered": true,
+    "registered_roles": [
+      {
+        "role": "validator",
+        "uid": 0,
+        "status": "registered"
+      },
+      {
+        "role": "baseline_miner",
+        "uid": 1,
+        "status": "registered"
+      }
+    ],
+    "onchain_settlement": "validator_scores_convert_to_uid_weights"
+  },
   "activeChallenge": {
     "challenge_id": "LUO-OUSG-XJ-V1",
     "required_jurisdictions": ["US", "HK", "SG", "EU"],
@@ -14,6 +31,7 @@
     "winner_score": 0.9625,
     "accepted_packet": "LUO-OUSG-XJ-202607-0001",
     "gated_uid_policy": "zero_emission_weight",
+    "emission_model": "subnet_emissions_are_allocated_by_validator_weights_not_fixed_answer_bounties",
     "weight_output": {
       "1": 0.3306,
       "2": 0.0,

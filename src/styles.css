@@ -587,6 +587,7 @@ a {
 .product-strip,
 .mechanism-section,
 .thesis-section,
+.incentive-section,
 .join-section,
 .formula-panel,
 .case-section {
@@ -712,7 +713,8 @@ a {
   gap: 14px;
 }
 
-.thesis-grid article {
+.thesis-grid article,
+.incentive-grid article {
   min-height: 260px;
   display: flex;
   flex-direction: column;
@@ -726,18 +728,30 @@ a {
     rgba(5, 6, 7, 0.62);
 }
 
-.thesis-grid strong {
+.thesis-grid strong,
+.incentive-grid strong {
   display: block;
   color: var(--text);
   font-size: clamp(21px, 1.9vw, 34px);
   line-height: 1.02;
 }
 
-.thesis-grid p {
+.thesis-grid p,
+.incentive-grid p {
   margin: 0;
   color: var(--soft);
   font-size: 15px;
   line-height: 1.55;
+}
+
+.incentive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.incentive-grid article {
+  min-height: 180px;
 }
 
 .join-panel {
@@ -1988,6 +2002,7 @@ a {
 
   .mechanism-section,
   .thesis-section,
+  .incentive-section,
   .join-section,
   .formula-panel,
   .case-section,
@@ -2193,6 +2208,7 @@ a {
 
   .mechanism-section,
   .thesis-section,
+  .incentive-section,
   .join-section,
   .formula-panel,
   .case-section,
@@ -2206,6 +2222,7 @@ a {
 
   .mechanism-rail,
   .thesis-grid,
+  .incentive-grid,
   .runtime-grid,
   .join-steps,
   .join-status,

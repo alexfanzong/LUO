@@ -5,7 +5,7 @@
   "network": {
     "chain": "bittensor",
     "network": "test",
-    "netuid": "assigned at testnet registration",
+    "netuid": 525,
     "minerIdentity": "hotkey",
     "validatorIdentity": "validator hotkey"
   },
@@ -44,5 +44,10 @@
       "coverage_breadth": 0.05
     },
     "hardGate": "Fake, missing, or mismatched sources receive zero emission weight."
+  },
+  "emissionModel": {
+    "settlement": "validator_score_to_uid_weights",
+    "minerRewardBasis": "subnet emission share, not fixed per-answer bounty",
+    "currentTestnetState": "validator_uid_0_and_baseline_miner_uid_1_registered"
   }
 }

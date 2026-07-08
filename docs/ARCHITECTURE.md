@@ -4,6 +4,8 @@ Legal Uncertainty Oracle (LUO) is an evidence-layer protocol for producing valid
 
 It is not a general legal chatbot, and it is not a leaderboard for the best legal AI. LUO evaluates a submitted Map Packet for a concrete question, source boundary, and jurisdiction scope.
 
+LUO is registered on Bittensor testnet as netuid 525. The current public architecture separates the on-chain settlement layer from the off-chain evidence workflow.
+
 ## Design Principle
 
 Final legal judgment is bespoke. The evidence layer can be standardized.
@@ -30,6 +32,8 @@ Question
   -> validator-scored Map Packet
   -> UID weight output
 ```
+
+The chain does not store the full validation materials. The chain stores the subnet, registered hotkeys, and validator weights. The evidence workflow remains off-chain so the validation surface can rotate safely.
 
 ## 1. Reviewed Source Boundary
 
@@ -74,7 +78,28 @@ Unsupported source claims are not eligible for emission weight in the validator 
 
 The public protocol describes the output shape and scoring philosophy. Production evaluation data and live validation sets should remain separate from public documentation.
 
-## 5. Rotating Validation
+## 5. Incentive And Emission Model
+
+LUO does not define a fixed bounty per answer.
+
+Miners compete for subnet emission through UID weights. Validators score Map Packets and convert those scores into weights. This rewards repeatable packet quality over one-off prose: source freshness, jurisdiction-specific retrieval, citation binding, divergence preservation, and stable schema output.
+
+The economic target is not a single legal memo. The target is continuous map maintenance for legal domains where the source landscape changes.
+
+## 6. Why Validators Do Not Self-Answer
+
+A validator could generate a single map, but that would collapse LUO into one supplier.
+
+LUO separates production from scoring:
+
+- the owner defines the subnet direction and public protocol,
+- miners monitor sources and produce Map Packets,
+- validators compare submissions and settle UID weights,
+- downstream users review accepted packets rather than trusting free-form model output.
+
+This makes legal uncertainty mapping contestable and refreshable. It also lets different miners compete on source pipelines, models, retrieval strategies, and domain expertise.
+
+## 7. Rotating Validation
 
 LUO should not rely on a fixed public test set.
 
@@ -82,7 +107,7 @@ The public layer can describe the challenge format, packet schema, and scoring p
 
 This lets miners build durable advantages around evidence pipelines, source review, and citation discipline without making a single round memorisable.
 
-## 6. Map Packet Output
+## 8. Map Packet Output
 
 The accepted packet is the commodity LUO produces.
 
