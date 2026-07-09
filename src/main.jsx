@@ -32,7 +32,7 @@ const thesisCards = [
 const mechanismSteps = [
   ['01', 'Owner Question', 'A user or subnet owner defines a high-value legal uncertainty question and the jurisdictions that matter.'],
   ['02', 'Miner Monitoring', 'Miners track source changes, retrieve relevant materials, and submit jurisdiction-aware Map Packets.'],
-  ['03', 'Validator Score', 'Validators check source grounding, legal divergence, reasoning, and coverage without publishing the live answer key.'],
+  ['03', 'Validator Score', 'Validators check source grounding, legal divergence, reasoning, and coverage with rotating validation checks.'],
   ['04', 'Weight Settlement', 'Accepted scores become UID weights on Bittensor; stronger packets receive a larger share of miner emissions.']
 ];
 
