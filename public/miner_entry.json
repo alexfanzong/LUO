@@ -24,6 +24,7 @@
     "challenge_id",
     "query",
     "required_jurisdictions",
+    "sources",
     "citations",
     "map_claims",
     "divergence_pairs",

@@ -41,6 +41,7 @@
     "challenge_transport": "MapPacketSynapse",
     "public_entry_contract": "/miner_entry.json",
     "required_response": [
+      "sources",
       "citations",
       "map_claims",
       "divergence_pairs",

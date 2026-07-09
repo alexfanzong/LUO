@@ -9,6 +9,7 @@
     "minerHotkey",
     "question",
     "requiredJurisdictions",
+    "sources",
     "citations",
     "mapClaims",
     "divergencePairs",
@@ -60,6 +61,50 @@
         },
         "publicNote": {
           "type": "string"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Public source objects supplied by the miner so the validator can inspect citation grounding.",
+      "items": {
+        "type": "object",
+        "required": [
+          "sourceId",
+          "jurisdiction",
+          "title",
+          "url",
+          "quote"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": {
+            "type": "string"
+          },
+          "jurisdiction": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "description": "Public URL or stable source locator."
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string",
+            "description": "Short source excerpt or span that supports the linked claim."
+          },
+          "accessedAt": {
+            "type": "string"
+          }
         }
       }
     },

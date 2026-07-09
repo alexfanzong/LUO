@@ -68,6 +68,7 @@ Your output must follow the miner submission shape:
 
 ```text
 citations
+sources
 mapClaims
 divergencePairs
 unresolvedGaps
@@ -77,6 +78,7 @@ Good packets usually answer:
 
 - What can be said for each jurisdiction?
 - Which source supports each claim?
+- What is the public URL, title, and short supporting quote for each source?
 - Where do jurisdictions diverge?
 - What remains unresolved?
 - What should not be inferred from the available sources?
@@ -118,6 +120,8 @@ Submit one JSON file using:
 
 Use [public/miner_submission_template.json](../public/miner_submission_template.json) as a starter.
 
+Do not submit the sample packet unchanged. Replace placeholder source titles, URLs, and quotes with the public sources your workflow actually used.
+
 ## 7. What Happens After Submission
 
 The validator will:
@@ -129,4 +133,3 @@ The validator will:
 5. convert accepted scores into UID weight recommendations.
 
 In the live subnet, validator scores are converted into UID weights for miner emission share.
-

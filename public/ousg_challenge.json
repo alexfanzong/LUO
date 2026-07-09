@@ -16,6 +16,7 @@
     "publicNote": "Public demo challenge. Live validation materials may rotate across rounds."
   },
   "expectedOutput": [
+    "sources",
     "citations",
     "mapClaims",
     "divergencePairs",

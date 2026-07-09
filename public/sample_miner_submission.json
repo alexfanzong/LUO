@@ -11,10 +11,62 @@
   ],
   "corpusManifest": {
     "manifestId": "public-demo-ousg-manifest",
-    "asOfDate": "2026-06-07",
+    "asOfDate": "2026-07-08",
     "sourceCount": 5,
-    "publicNote": "Reviewed source set for the LUO OUSG demo challenge."
+    "publicNote": "Illustrative public sample. Replace demo source locators with real public URLs before submission."
   },
+  "sources": [
+    {
+      "sourceId": "ONDO-SRC-01",
+      "jurisdiction": "PRODUCT",
+      "title": "Public OUSG product material",
+      "url": "https://example.com/public-demo/ondo-ousg",
+      "publisher": "Public demo source",
+      "date": "2026-07-08",
+      "quote": "Demo excerpt: OUSG access and transferability should be evaluated against product-specific restrictions.",
+      "accessedAt": "2026-07-08"
+    },
+    {
+      "sourceId": "US-SRC-01",
+      "jurisdiction": "US",
+      "title": "US private-offering boundary source",
+      "url": "https://example.com/public-demo/us-boundary",
+      "publisher": "Public demo source",
+      "date": "2026-07-08",
+      "quote": "Demo excerpt: private-offering constraints should not be converted into public retail eligibility.",
+      "accessedAt": "2026-07-08"
+    },
+    {
+      "sourceId": "HK-SRC-01",
+      "jurisdiction": "HK",
+      "title": "Hong Kong tokenised-product boundary source",
+      "url": "https://example.com/public-demo/hk-boundary",
+      "publisher": "Public demo source",
+      "date": "2026-07-08",
+      "quote": "Demo excerpt: conditional tokenised-product materials do not by themselves prove retail authorisation.",
+      "accessedAt": "2026-07-08"
+    },
+    {
+      "sourceId": "SG-SRC-01",
+      "jurisdiction": "SG",
+      "title": "Singapore product-access boundary source",
+      "url": "https://example.com/public-demo/sg-boundary",
+      "publisher": "Public demo source",
+      "date": "2026-07-08",
+      "quote": "Demo excerpt: narrow source context should not be expanded into general offering permission.",
+      "accessedAt": "2026-07-08"
+    },
+    {
+      "sourceId": "EU-SRC-01",
+      "jurisdiction": "EU",
+      "title": "EU classification-boundary source",
+      "url": "https://example.com/public-demo/eu-boundary",
+      "publisher": "Public demo source",
+      "date": "2026-07-08",
+      "quote": "Demo excerpt: product-specific classification remains a boundary for downstream execution.",
+      "accessedAt": "2026-07-08"
+    }
+  ],
   "citations": [
     {
       "sourceId": "ONDO-SRC-01",

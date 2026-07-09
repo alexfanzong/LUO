@@ -10,6 +10,18 @@
     "sourceCount": 0,
     "publicNote": "Participant may use public sources and their own research workflow. Validator will evaluate source grounding and packet quality."
   },
+  "sources": [
+    {
+      "sourceId": "SRC-01",
+      "jurisdiction": "US",
+      "title": "<Public source title>",
+      "url": "<Public source URL>",
+      "publisher": "<Regulator, issuer, court, exchange, or other source publisher>",
+      "date": "<Publication date if known>",
+      "quote": "<Short excerpt or span that supports the linked claim>",
+      "accessedAt": "2026-07-08"
+    }
+  ],
   "citations": [
     {
       "sourceId": "SRC-01",
