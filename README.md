@@ -36,7 +36,7 @@ For legal work, average model performance is less important than issue-specific 
 
 LUO therefore scores the packet, not the brand of the model behind it.
 
-Miners can use different models, retrieval systems, source pipelines, citation checkers, and domain-specific workflows. The validator evaluates the submitted packet against the question and source boundary.
+Miners can use different models, citation checkers, and domain-specific workflows. The validator evaluates the submitted packet against the question and source boundary for that round.
 
 ## What Miners Build
 
@@ -78,8 +78,6 @@ LUO gives miners a concrete surface to compete on: source-backed legal map forma
 
 Miner advantage can come from:
 
-- fresher and cleaner source pipelines,
-- stronger jurisdiction-specific retrieval,
 - better claim-to-citation binding,
 - domain specialization in Web3, AI, RWA, sanctions, custody, or cross-border compliance,
 - lower cost and lower latency,
@@ -105,13 +103,15 @@ The advantage is scale and refreshability. A one-off legal memo can become stale
 
 This is the technical bet behind LUO: the evidence layer of legal work can become structured, contestable, continuously updated, and economically rewarded.
 
-## Reviewed Sources And Candidate Sources
+## Source Boundary
 
-The current demo starts from reviewed source packs and public benchmark cases.
+Each LUO round has a source boundary: the set of sources, source locators, or source rules that the validator will use for that round.
 
-In a production setting, miners may also surface candidate sources through their submissions. Candidate sources should not automatically enter the reviewed source base. They need validation for authenticity, date, jurisdiction, relevance, and claim support before they can influence later rounds.
+The current public demo uses a bounded challenge manifest so the validator can score packets deterministically. This keeps the demo focused on map quality: whether a miner preserves jurisdictional divergence, binds claims to sources, and avoids over-reading silence or conditional frameworks.
 
-This keeps LUO from becoming a raw data dump. The network rewards evidence mapping, not unreviewed accumulation.
+In production, miners may also submit open web URLs with anchored quotes. Those candidate sources should not automatically enter the reviewed source base. They need validation for authenticity, date, jurisdiction, relevance, and whether the cited text actually appears in the source before they can influence later rounds.
+
+This keeps LUO from becoming a raw data dump. The network rewards evidence mapping, not unreviewed accumulation or search-result luck.
 
 ## Scoring Philosophy
 
@@ -132,7 +132,7 @@ The public schema explains the expected packet shape. Live validation sets, chal
 
 Public rules are useful. Fixed public validation surfaces are not.
 
-LUO can rotate questions, jurisdiction combinations, source manifests, and validation checks across rounds. This allows miners to improve their evidence pipelines without turning the subnet into a fixed benchmark that can be memorized after one round.
+LUO can rotate questions, jurisdiction combinations, source manifests, and validation checks across rounds. This allows miners to improve their map-formation systems without turning the subnet into a fixed benchmark that can be memorized after one round.
 
 The stable public contract is the packet format and scoring philosophy. The live validation surface can change.
 

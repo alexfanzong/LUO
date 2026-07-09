@@ -39,7 +39,7 @@ The chain does not store the full validation materials. The chain stores the sub
 
 Each round begins with a bounded source base and a challenge manifest. The source base is treated as reviewed input for the validator round, not as an open data dump.
 
-This allows miners to compete on retrieval, interpretation, and packet quality while keeping the validation target checkable.
+This allows miners to compete on interpretation, claim binding, divergence preservation, and packet quality while keeping the validation target checkable.
 
 ## 2. Miner Submission
 
@@ -55,7 +55,7 @@ A miner packet can include:
 - citations,
 - downstream-use limits.
 
-Miners may use their own models, retrieval systems, citation checkers, and domain-specific workflows. The validator only accepts what survives source-bound review.
+Miners may use their own models, citation checkers, and domain-specific workflows. The validator only accepts what survives source-bound review.
 
 ## 3. Candidate Sources
 
@@ -63,7 +63,7 @@ Production LUO can allow miners to surface candidate sources.
 
 Candidate sources should be evaluated before they affect the reviewed source base. A useful review process checks source authenticity, date, jurisdiction, relevance, and whether the cited text actually supports the submitted claim.
 
-This gives miners room to contribute discovery and freshness without letting unreviewed material control the map.
+This gives miners room to contribute discovery and freshness in production without letting unreviewed material control the map.
 
 ## 4. Validator Scoring
 
@@ -97,7 +97,7 @@ LUO separates production from scoring:
 - validators compare submissions and settle UID weights,
 - downstream users review accepted packets rather than trusting free-form model output.
 
-This makes legal uncertainty mapping contestable and refreshable. It also lets different miners compete on source pipelines, models, retrieval strategies, and domain expertise.
+This makes legal uncertainty mapping contestable and refreshable. It also lets different miners compete on models, claim-binding strategies, source-discipline, and domain expertise.
 
 ## 7. Rotating Validation
 

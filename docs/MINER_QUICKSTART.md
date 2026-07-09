@@ -56,13 +56,12 @@ US, HK, SG, EU
 
 ## 3. Produce A Map Packet
 
-Use any research workflow you like:
+Use any packet-generation workflow you like:
 
 - Claude, ChatGPT, Perplexity, local models, or another agent
-- public regulator pages
-- official issuer documentation
-- legal databases or source collections you have access to
-- your own retrieval and citation checker
+- your own claim extraction and citation checker
+- legal databases or source collections you have access to for background understanding
+- domain-specific review workflows
 
 Your output must follow the miner submission shape:
 
@@ -78,10 +77,12 @@ Good packets usually answer:
 
 - What can be said for each jurisdiction?
 - Which source supports each claim?
-- What is the public URL, title, and short supporting quote for each source?
+- What source locator, title, and short supporting quote anchors each claim?
 - Where do jurisdictions diverge?
 - What remains unresolved?
 - What should not be inferred from the available sources?
+
+For the public demo, follow the source boundary in the challenge manifest. Production rounds may accept open web URLs with anchored quotes, but the current demo keeps source validation bounded so the validator can score submissions deterministically.
 
 ## 4. How The Validator Scores
 
@@ -120,7 +121,7 @@ Submit one JSON file using:
 
 Use [public/miner_submission_template.json](../public/miner_submission_template.json) as a starter.
 
-Do not submit the sample packet unchanged. Replace placeholder source titles, URLs, and quotes with the public sources your workflow actually used.
+Do not submit the sample packet unchanged. Replace placeholder source titles, locators, and quotes with sources allowed by the active challenge manifest.
 
 ## 7. What Happens After Submission
 
