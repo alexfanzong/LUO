@@ -754,6 +754,15 @@ a {
   min-height: 180px;
 }
 
+.incentive-section .section-copy h2 {
+  max-width: 960px;
+  font-size: clamp(42px, 4.8vw, 72px);
+}
+
+.incentive-section .section-copy p {
+  max-width: 760px;
+}
+
 .join-panel {
   border: 1px solid var(--line);
   border-radius: 16px;

@@ -16,16 +16,16 @@ const phases = [
 
 const thesisCards = [
   [
-    'Not a Legal AI contest',
-    'LUO does not reward the model with the best brand name. It rewards the miner that returns the most reliable packet for a concrete legal uncertainty question.'
+    'Submit map packets',
+    'Miners return structured legal uncertainty maps for a concrete challenge, not free-form legal memos.'
   ],
   [
-    'Continuous map formation',
-    'Regulatory maps age. Miners compete to monitor new sources, update jurisdiction boundaries, and preserve uncertainty when the law moves.'
+    'Score evidence quality',
+    'Validators check citations, jurisdictional divergence, reasoning, and coverage before weights are assigned.'
   ],
   [
-    'Emission from weights',
-    'LUO does not pay a fixed bounty per answer. Validators score Map Packets and convert those scores into UID weights for subnet emissions.'
+    'Earn emission share',
+    'Passing packets receive UID weights. Fake, missing, or mismatched sources receive zero weight.'
   ]
 ];
 
@@ -61,20 +61,20 @@ const subnetRuntimeStats = [
 
 const incentiveCards = [
   [
-    'Beyond one-off consulting',
-    'A single legal memo can answer one client at one moment. LUO turns the repeatable layer behind that work into a market: monitoring, updating, and packaging jurisdictional uncertainty across many questions.'
+    'For miners',
+    'Register a hotkey, receive a challenge, submit a schema-bound Map Packet, and compete on source quality.'
   ],
   [
-    'Why miners join',
-    'Miners are rewarded for repeatable production advantages: fresher source pipelines, jurisdiction expertise, lower latency, better citation binding, and stable schema output.'
+    'For validators',
+    'Score packets with citation, divergence, reasoning, and coverage checks, then convert scores into UID weights.'
   ],
   [
-    'Why validators do not self-answer',
-    'A validator can generate one map, but the subnet needs competing producers. The validator keeps the scoring boundary, compares submissions, and settles weights instead of becoming the sole supplier.'
+    'What earns weight',
+    'Fresh sources, clean citation binding, jurisdiction-specific reasoning, honest uncertainty, and low-latency updates.'
   ],
   [
-    'Scalable evidence production',
-    'LUO standardizes many researchers, models, and source pipelines into comparable packets that can be audited, refreshed, and rewarded over time.'
+    'What gets zero',
+    'Fake citations, missing sources, mismatched evidence, trap hits, or packets that flatten legal disagreement.'
   ]
 ];
 
@@ -507,11 +507,11 @@ function App() {
 
       <section className="incentive-section" id="incentives">
         <div className="section-copy">
-          <span>Miner incentives</span>
-          <h2>The value is not one answer. It is continuous legal map maintenance.</h2>
+          <span>Join the subnet</span>
+          <h2>Miners produce maps. Validators assign weight.</h2>
           <p>
-            Direct legal BD is still valuable. LUO exists for the repeatable layer underneath it:
-            who can keep legal uncertainty maps current as sources, enforcement posture, and jurisdictional boundaries change.
+            LUO is a testnet market for source-backed legal uncertainty maps. Submit a packet, survive
+            the source gate, and earn weight for verifiable work.
           </p>
         </div>
         <div className="incentive-grid">
